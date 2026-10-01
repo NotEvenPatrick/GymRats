@@ -1,0 +1,1 @@
+An exercise application for using angular and java
