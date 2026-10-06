@@ -13,6 +13,6 @@ export class AuthService {
   }
 
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/api/login', loginRequest);
+    return this.http.post<LoginResponse>('/api/auth/login', loginRequest);
   }
 }

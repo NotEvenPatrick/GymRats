@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import de.patrickoeder.gymrats.user.dto.LoginRequest;
+import de.patrickoeder.gymrats.user.dto.LoginResponse;
 import de.patrickoeder.gymrats.user.dto.UserCreateRequest;
 import de.patrickoeder.gymrats.user.dto.UserResponse;
 
@@ -38,6 +40,23 @@ public class UserService {
         response.setFirstName(savedUser.getFirstName());
         response.setLastName(savedUser.getLastName());
         response.setEmail(savedUser.getEmail());
+
+        return response;
+    }
+
+    public LoginResponse loginUser(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ungültige E-Mail-Adresse oder Passwort."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ungültige E-Mail-Adresse oder Passwort.");
+        }
+
+        LoginResponse response = new LoginResponse();
+        response.setId(user.getId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
 
         return response;
     }
