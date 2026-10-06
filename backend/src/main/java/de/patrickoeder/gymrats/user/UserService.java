@@ -1,7 +1,9 @@
 package de.patrickoeder.gymrats.user;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import de.patrickoeder.gymrats.user.dto.UserCreateRequest;
 import de.patrickoeder.gymrats.user.dto.UserResponse;
@@ -18,6 +20,10 @@ public class UserService {
     }
 
     public UserResponse createUser(UserCreateRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        }
+
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
