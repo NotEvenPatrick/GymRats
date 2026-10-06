@@ -64,7 +64,8 @@
               "buildTarget": "gymrats-ui:build:production"
             },
             "development": {
-              "buildTarget": "gymrats-ui:build:development"
+              "buildTarget": "gymrats-ui:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
