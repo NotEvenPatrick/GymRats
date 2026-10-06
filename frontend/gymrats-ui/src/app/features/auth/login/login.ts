@@ -23,10 +23,10 @@ export class Login {
       const loginRequest: LoginRequest = this.form.value as LoginRequest;
       this.authService.login(loginRequest).subscribe({
         next: (response: LoginResponse) => {
-          // Handle successful login
+          console.log('Login successful:', response);
         },
         error: (error: HttpErrorResponse) => {
-          // Handle login error
+          console.error('Login failed:', error);
         }
       });
     }

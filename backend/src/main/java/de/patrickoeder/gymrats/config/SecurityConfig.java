@@ -22,6 +22,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                 .requestMatchers("/api/users/**").permitAll() // Allow user creation without authentication
+                .requestMatchers("/api/auth/login").permitAll() // Allow login without authentication
                 .anyRequest().authenticated()
             ).exceptionHandling(exception -> exception
                 .authenticationEntryPoint((request, response, authException) -> {
