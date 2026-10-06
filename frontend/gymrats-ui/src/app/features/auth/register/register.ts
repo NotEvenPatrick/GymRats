@@ -3,6 +3,7 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../services/auth-service';
 import { RegisterRequest, RegisterResponse } from '../models/register';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [ReactiveFormsModule],
@@ -13,6 +14,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class Register {
 
   private authService = inject(AuthService);
+  private router = inject(Router);
+
   form: FormGroup = new FormGroup({
     firstName: new FormControl<string>('', Validators.required),
     lastName: new FormControl<string>('', Validators.required),
@@ -26,6 +29,7 @@ export class Register {
       this.authService.register(registerRequest).subscribe({
         next: (response: RegisterResponse) => {
           console.log('Registration successful:', response);
+          this.router.navigate(['/login']);
         },
         error: (error: HttpErrorResponse) => {
           switch (error.status) {
