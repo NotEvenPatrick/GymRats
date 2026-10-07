@@ -32,6 +32,11 @@ export class AuthService {
     );
   }
 
+  logout(): void {
+    this.tokenStorageService.removeToken();
+    this.currentUserSubject.next(null);
+  }
+
   restoreSession(): Observable<CurrentUser | null> {
     const token = this.tokenStorageService.getToken();
 
