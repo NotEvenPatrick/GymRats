@@ -1,9 +1,16 @@
 package de.patrickoeder.gymrats.user;
 
+import java.time.Instant;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import de.patrickoeder.gymrats.user.dto.LoginRequest;
 import de.patrickoeder.gymrats.user.dto.LoginResponse;
@@ -15,10 +22,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtEncoder jwtEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtEncoder jwtEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder; 
+        this.jwtEncoder = jwtEncoder;
     }
 
     public UserResponse createUser(UserCreateRequest request) {
@@ -51,12 +60,20 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ungültige E-Mail-Adresse oder Passwort.");
         }
+            JwtClaimsSet claims = JwtClaimsSet.builder()
+            .subject(user.getId().toString())
+            .issuedAt(Instant.now())
+            .expiresAt(Instant.now().plusSeconds(3600))
+            .build();
+
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
         LoginResponse response = new LoginResponse();
-        response.setId(user.getId());
+        response.setUserId(user.getId());
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
         response.setEmail(user.getEmail());
+        response.setToken(token);
 
         return response;
     }

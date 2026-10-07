@@ -7,12 +7,13 @@ public class LoginResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private String token;
 
-    public UUID getId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setId(UUID id) {
+    public void setUserId(UUID id) {
         this.userId = id;
     }
 
@@ -38,5 +39,13 @@ public class LoginResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
