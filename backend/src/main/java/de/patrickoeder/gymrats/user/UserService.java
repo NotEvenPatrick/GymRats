@@ -1,16 +1,16 @@
 package de.patrickoeder.gymrats.user;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.nimbusds.jwt.JWTClaimsSet;
 
 import de.patrickoeder.gymrats.user.dto.LoginRequest;
 import de.patrickoeder.gymrats.user.dto.LoginResponse;
@@ -74,6 +74,20 @@ public class UserService {
         response.setLastName(user.getLastName());
         response.setEmail(user.getEmail());
         response.setToken(token);
+
+        return response;
+    }
+
+    public UserResponse getCurrentUser(Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Benutzer nicht gefunden."));
+
+        UserResponse response = new UserResponse();
+        response.setId(user.getId());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setEmail(user.getEmail());
 
         return response;
     }

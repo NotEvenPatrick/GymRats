@@ -10,8 +10,10 @@ import jakarta.validation.Valid;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -29,4 +31,11 @@ public class UserController {
         return ResponseEntity.created(URI.create("/api/users/" + createdUser.getId()))
                 .body(createdUser);
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser(Authentication authentication) {
+        UserResponse currentUser = userService.getCurrentUser(authentication);
+        return ResponseEntity.ok(currentUser);
+    }
+    
 }
