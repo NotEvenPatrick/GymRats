@@ -21,4 +21,8 @@ export class AuthService {
       })
     );
   }
+
+  getToken(): string | null {
+    return this.currentUserSubject.value?.token ?? null;
+  }
 }
