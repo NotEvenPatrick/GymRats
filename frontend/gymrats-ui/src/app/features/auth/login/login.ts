@@ -3,7 +3,7 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../services/auth-service';
 import { LoginRequest, LoginResponse } from '../models/login';
 import { HttpErrorResponse } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 export class Login {
 
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   form: FormGroup = new FormGroup({
     email: new FormControl<string>('', [Validators.required, Validators.email]),
@@ -25,7 +26,7 @@ export class Login {
       const loginRequest: LoginRequest = this.form.value as LoginRequest;
       this.authService.login(loginRequest).subscribe({
         next: (response: LoginResponse) => {
-          console.log('Login successful:', response);
+          this.router.navigate(['/home']);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Login failed:', error);
