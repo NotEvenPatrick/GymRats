@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RegisterRequest, RegisterResponse } from '../models/register';
-import { BehaviorSubject, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, catchError } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/login';
 import { TokenStorageService } from './token-storage.service';
 import { CurrentUser } from '../models/current-user';
@@ -45,7 +45,14 @@ export class AuthService {
     }
 
     return this.http.get<CurrentUser>('/api/users/me').pipe(
-      tap(user => this.currentUserSubject.next(user))
+      tap(user => this.currentUserSubject.next(user)),
+      catchError((error: HttpErrorResponse) => {
+        if(error.status === 401) {
+          this.tokenStorageService.removeToken();
+          this.currentUserSubject.next(null);
+        }
+        return of(null);
+      })
     );
   }
 }
