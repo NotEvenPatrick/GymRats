@@ -2,6 +2,7 @@ package de.patrickoeder.gymrats.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,7 +23,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
             .authorizeHttpRequests(auth -> auth
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                .requestMatchers("/api/users/**").permitAll() // Allow user creation without authentication
+                .requestMatchers(HttpMethod.POST,"/api/users/").permitAll() // Allow user creation without authentication
                 .requestMatchers("/api/auth/login").permitAll() // Allow login without authentication
                 .anyRequest().authenticated()
             ).exceptionHandling(exception -> exception
