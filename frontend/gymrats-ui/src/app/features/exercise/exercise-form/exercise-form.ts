@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { NotificationService } from '../../../core/services/notification-service';
 import { ExerciseService } from '../services/exercise-service';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -18,6 +19,7 @@ import { ExerciseRequest } from '../models/exercise-request';
 })
 export class ExerciseForm {
   private exerciseService = inject(ExerciseService);
+  private notificationService = inject(NotificationService);
 
   private dialogRef = inject(MatDialogRef<ExerciseForm>);
   private data = inject<{ exercise: Exercise | null }>(MAT_DIALOG_DATA);
@@ -34,7 +36,7 @@ export class ExerciseForm {
     return this.data.exercise !== null;
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.exerciseForm.invalid) {
       this.exerciseForm.markAllAsTouched();
       return;
@@ -56,6 +58,9 @@ export class ExerciseForm {
       ? this.exerciseService.update(existingExercise.id, exercise)
       : this.exerciseService.create(exercise);
 
-    request$.subscribe(() => this.dialogRef.close(true));
+    request$.subscribe({
+      next: () => { this.notificationService.success('Übung erfolgreich gespeichert'); this.dialogRef.close(true); },
+      error: err => this.notificationService.error('Fehler beim Speichern der Übung')
+    });
   }
 }
