@@ -22,10 +22,13 @@ export class Login {
   });
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const loginRequest: LoginRequest = this.form.value as LoginRequest;
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const loginRequest: LoginRequest = this.form.value as LoginRequest;
       this.authService.login(loginRequest).subscribe({
-        next: (response: LoginResponse) => {
+        next: () => {
           this.router.navigate(['/home']);
         },
         error: (error: HttpErrorResponse) => {
@@ -34,4 +37,4 @@ export class Login {
       });
     }
   }
-}
+

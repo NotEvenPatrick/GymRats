@@ -1,0 +1,10 @@
+<div>
+    <ul>
+    @for (exercise of exercises$ | async; track exercise.id) {
+        <li>{{ exercise.name }} - {{ exercise.muscleGroup }} - {{ exercise.description }}</li>
+    }
+    </ul>
+</div>
+<div>
+    <button mat-raised-button color="primary" (click)="openExerciseDialog()">Übung hinzufügen</button>
+</div>

@@ -3,6 +3,7 @@ import { Register } from './features/auth/register/register';
 import { Login } from './features/auth/login/login';
 import { Home } from './pages/home/home';
 import { authGuard } from './core/guards/auth-guard';
+import { ExerciseList } from './features/exercise/exercise-list/exercise-list';
 
 export const routes: Routes = [
     {
@@ -16,6 +17,11 @@ export const routes: Routes = [
     {
         path: 'home',
         component: Home,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'exercises',
+        component: ExerciseList,
         canActivate: [authGuard],
     },
     {

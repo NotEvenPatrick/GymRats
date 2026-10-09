@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RegisterRequest, RegisterResponse } from '../models/register';
 import { BehaviorSubject, Observable, of, tap, catchError } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/login';
-import { TokenStorageService } from './token-storage.service';
+import { TokenStorageService } from '../../../core/services/token-storage.service';
 import { CurrentUser } from '../models/current-user';
 
 @Service()

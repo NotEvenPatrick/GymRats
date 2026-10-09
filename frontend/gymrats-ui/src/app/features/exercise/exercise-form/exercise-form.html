@@ -1,0 +1,25 @@
+<div>
+    <form [formGroup]="exerciseForm" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Muskelgruppe</mat-label>
+            <mat-select formControlName="muscleGroup">
+                @for (muscleGroup of muscleGroups; track muscleGroup) {
+                <mat-option [value]="muscleGroup.value">{{ muscleGroup.label }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Beschreibung</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <div>
+            <button mat-raised-button color="primary" [disabled]="exerciseForm.invalid" type="submit">
+                Speichern
+            </button>
+        </div>
+    </form>
+</div>
