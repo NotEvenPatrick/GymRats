@@ -5,5 +5,6 @@ import java.util.UUID;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, UUID> {
     
-
+    boolean existsByName(String name);
+    
 }
