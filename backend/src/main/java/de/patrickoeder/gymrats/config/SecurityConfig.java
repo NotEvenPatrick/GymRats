@@ -23,7 +23,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
             .authorizeHttpRequests(auth -> auth
                 .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                .requestMatchers(HttpMethod.POST,"/api/users/").permitAll() // Allow user creation without authentication
+                .requestMatchers(HttpMethod.POST,"/api/users").permitAll() // Allow user creation without authentication
                 .requestMatchers("/api/auth/login").permitAll() // Allow login without authentication
                 .anyRequest().authenticated()
             ).exceptionHandling(exception -> exception

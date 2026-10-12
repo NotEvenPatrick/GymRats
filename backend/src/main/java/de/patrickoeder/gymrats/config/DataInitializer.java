@@ -5,9 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import de.patrickoeder.gymrats.exercise.Exercise;
-import de.patrickoeder.gymrats.exercise.ExerciseRepository;
-import de.patrickoeder.gymrats.exercise.MuscleGroup;
 import de.patrickoeder.gymrats.user.Role;
 import de.patrickoeder.gymrats.user.User;
 import de.patrickoeder.gymrats.user.UserRepository;
@@ -16,7 +13,7 @@ import de.patrickoeder.gymrats.user.UserRepository;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner init(UserRepository userRepository, ExerciseRepository exerciseRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner init(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             if (!userRepository.existsByEmail("patrick@example.com")) {
                 User user = new User();
