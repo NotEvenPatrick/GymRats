@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+footer {
+  border-top: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+}

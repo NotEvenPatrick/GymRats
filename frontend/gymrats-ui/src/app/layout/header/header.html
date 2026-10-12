@@ -1,0 +1,20 @@
+<header>
+    <mat-toolbar>
+        <a class="brand" routerLink="/home">GymRats</a>
+
+        <nav aria-label="Hauptnavigation">
+            @for (item of navItems; track item.route) {
+                <a 
+                [routerLink]="item.route" 
+                routerLinkActive="active-link" 
+                [routerLinkActiveOptions]="{ exact: true }">
+                {{ item.label }}
+            </a>
+            }
+        </nav>
+
+        <span class="spacer"></span>
+        
+        <button mat-button (click)="onLogout()">Logout</button>
+    </mat-toolbar>
+</header>

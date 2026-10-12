@@ -1,11 +1,8 @@
-@if (authService.currentUser$ | async) {
-    <header>
-        <button (click)="onLogout()">Logout</button>
-    </header>
+@if (currentUser$ | async)
+{  
+  <app-header></app-header>
 }
 <main>
   <router-outlet></router-outlet>
 </main>
-<footer>
-  <p>&copy; 2026 GymRats</p>
-</footer>
+<app-footer></app-footer>
