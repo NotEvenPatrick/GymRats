@@ -4,6 +4,8 @@ import { Login } from './features/auth/login/login';
 import { Home } from './pages/home/home';
 import { authGuard } from './core/guards/auth-guard';
 import { ExerciseList } from './features/exercise/exercise-list/exercise-list';
+import { WorkoutList } from './features/workout/workout-list/workout-list';
+import { WorkoutForm } from './features/workout/workout-form/workout-form';
 
 export const routes: Routes = [
     {
@@ -17,6 +19,21 @@ export const routes: Routes = [
     {
         path: 'home',
         component: Home,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'workouts',
+        component: WorkoutList,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'workouts/new',
+        component: WorkoutForm,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'workouts/:id/edit',
+        component: WorkoutForm,
         canActivate: [authGuard],
     },
     {

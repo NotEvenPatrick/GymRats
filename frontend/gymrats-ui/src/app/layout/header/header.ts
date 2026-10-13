@@ -21,6 +21,7 @@ export class Header {
 
   protected readonly navItems: { label: string; route: string }[] = [
     { label: 'Home', route: '/home' },
+    { label: 'Trainingspläne', route: '/workouts' },
     { label: 'Übungen', route: '/exercises' },
   ];
 

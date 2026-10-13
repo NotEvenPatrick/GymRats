@@ -1,0 +1,35 @@
+.workout-row {
+    cursor: pointer;
+}
+
+.workout-row:hover {
+    background: rgba(128, 128, 128, 0.08);
+}
+
+.expanded-row {
+    border-bottom-color: transparent;
+}
+
+.detail-row-hidden {
+    display: none;
+}
+
+.workout-detail {
+    padding: 1rem 1.5rem;
+}
+
+.workout-detail h3 {
+    margin-top: 0;
+}
+
+.exercise-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.exercise-detail-table th,
+.exercise-detail-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}

@@ -1,0 +1,135 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2>Trainingsplan</h2>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+        <mat-error>Der Name ist erforderlich.</mat-error>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Beschreibung</mat-label>
+        <textarea matInput formControlName="description" rows="2"></textarea>
+    </mat-form-field>
+
+    <h3>Übungen</h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <span class="visually-hidden">Reihenfolge</span>
+                    </th>
+                    <th>Übung</th>
+                    <th>Geplante Sätze</th>
+                    <th>Min. Wdh.</th>
+                    <th>Max. Wdh.</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+
+            <tbody formArrayName="exercises" cdkDropList [cdkDropListData]="exerciseRows.controls"
+                cdkDropListOrientation="vertical" (cdkDropListDropped)="drop($event)">
+                @for (row of exerciseRows.controls; track row; let i = $index) {
+                <tr [formGroupName]="i" cdkDrag>
+                    <td>
+                        <button mat-icon-button type="button" cdkDragHandle
+                            [attr.aria-label]="'Übung in Zeile ' + (i + 1) + ' verschieben'">
+                            <mat-icon>drag_indicator</mat-icon>
+                        </button>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Übung suchen</mat-label>
+
+                            <input matInput type="text" formControlName="exerciseSearch"
+                                [matAutocomplete]="exerciseAuto" (input)="onExerciseSearchInput(row)"
+                                [attr.aria-label]="'Übung für Zeile ' + (i + 1) + ' suchen'">
+
+                            <mat-autocomplete #exerciseAuto="matAutocomplete" [displayWith]="displayExercise"
+                                (optionSelected)="onExerciseSelected(row, $event.option.value)">
+
+                                @for (exercise of getFilteredExercises(row); track exercise.id) {
+                                <mat-option [value]="exercise">
+                                    {{ exercise.name }}
+                                </mat-option>
+                                }
+                            </mat-autocomplete>
+
+                            @if (
+                            row.controls['exerciseId'].hasError('required')
+                            && row.controls['exerciseId'].touched
+                            ) {
+                            <mat-error>Bitte wähle eine Übung aus der Vorschlagsliste.</mat-error>
+                            }
+                        </mat-form-field>
+                    </td>
+
+                    <td>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Geplante Sätze</mat-label>
+                            <input matInput formControlName="plannedSets" type="number" min="1">
+                            @if (row.controls['plannedSets'].hasError('required') &&
+                            row.controls['plannedSets'].touched) {
+                            <mat-error>Bitte gib die geplanten Sätze an.</mat-error>
+                            }
+                            @if (row.controls['plannedSets'].hasError('min') && row.controls['plannedSets'].touched) {
+                            <mat-error>Die geplanten Sätze müssen mindestens 1 betragen.</mat-error>
+                            }
+                        </mat-form-field>
+                    </td>
+
+                    <td>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Min. Wdh.</mat-label>
+                            <input matInput formControlName="minReps" type="number" min="1">
+                            @if (row.controls['minReps'].hasError('required') && row.controls['minReps'].touched) {
+                            <mat-error>Bitte gib die minimale Wiederholungszahl an.</mat-error>
+                            }
+                            @if (row.controls['minReps'].hasError('min') && row.controls['minReps'].touched) {
+                            <mat-error>Die minimale Wiederholungszahl muss mindestens 1 betragen.</mat-error>
+                            }
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Max. Wdh.</mat-label>
+                            <input matInput formControlName="maxReps" type="number" min="1">
+                            @if (row.controls['maxReps'].hasError('required') && row.controls['maxReps'].touched) {
+                            <mat-error>Bitte gib die maximale Wiederholungszahl an.</mat-error>
+                            }
+                            @if (row.controls['maxReps'].hasError('min') && row.controls['maxReps'].touched) {
+                            <mat-error>Die maximale Wiederholungszahl muss mindestens 1 betragen.</mat-error>
+                            }
+                        </mat-form-field>
+                        @if (row.hasError('invalidRepetitionRange') && (row.controls['minReps'].touched ||
+                        row.controls['maxReps'].touched)) {
+                        <mat-error>Min. Wdh. darf nicht größer als Max. Wdh. sein.</mat-error>
+                        }
+                    </td>
+                    <td>
+                        <button mat-icon-button color="warn" type="button" (click)="removeExerciseRow(i)"
+                            [attr.aria-label]="'Übung in Zeile ' + (i + 1) + ' entfernen'">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if (exerciseRows.hasError('required') && exerciseRows.touched) {
+    <div class="validation-error" role="alert">
+        Bitte füge mindestens eine Übung hinzu.
+    </div>
+    }
+    <button mat-stroked-button type="button" (click)="addExerciseRow()">
+        + Übung hinzufügen
+    </button>
+    <div class="form-actions">
+        <button mat-button type="button" (click)="router.navigate(['/workouts'])">Abbrechen</button>
+        <button mat-flat-button type="submit">Speichern</button>
+    </div>
+</form>

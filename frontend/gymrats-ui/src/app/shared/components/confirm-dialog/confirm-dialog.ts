@@ -11,7 +11,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 export class ConfirmDialog {
   protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef);
-  
+
   cancel(): void {
     this.dialogRef.close(false);
   }

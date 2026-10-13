@@ -1,0 +1,103 @@
+<table mat-table [dataSource]="workouts()" multiTemplateDataRows>
+
+    <!-- Name -->
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let workout">
+            {{ workout.name }}
+        </td>
+    </ng-container>
+
+    <!-- Beschreibung -->
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Beschreibung</th>
+        <td mat-cell *matCellDef="let workout">
+            {{ workout.description || 'Keine Beschreibung' }}
+        </td>
+    </ng-container>
+
+    <!-- Anzahl der Übungen -->
+    <ng-container matColumnDef="exerciseCount">
+        <th mat-header-cell *matHeaderCellDef>Übungen</th>
+        <td mat-cell *matCellDef="let workout">
+            {{ workout.exercises.length }}
+        </td>
+    </ng-container>
+
+    <!-- Aktionen -->
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Aktionen</th>
+        <td mat-cell *matCellDef="let workout">
+            <button mat-icon-button type="button" (click)="$event.stopPropagation(); editWorkout(workout.id)"
+                [attr.aria-label]="'Trainingsplan ' + workout.name + ' bearbeiten'">
+                <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button type="button" (click)="$event.stopPropagation(); deleteWorkout(workout.id)"
+                [attr.aria-label]="'Trainingsplan ' + workout.name + ' löschen'">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+
+    <!-- Aufgeklappte Details -->
+    <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let workout" [attr.colspan]="displayedColumns.length">
+
+            @if (expandedWorkoutId() === workout.id) {
+            <div class="workout-detail">
+                <h3>Übungen im Trainingsplan</h3>
+
+                @if (workout.exercises.length) {
+                <table class="exercise-detail-table">
+                    <thead>
+                        <tr>
+                            <th>Übung</th>
+                            <th>Muskelgruppe</th>
+                            <th>Sätze</th>
+                            <th>Wiederholungen</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (exercise of workout.exercises; track exercise.id) {
+                        <tr>
+                            <td>
+                                {{ exercise.position }}. {{ exercise.exerciseName }}
+                            </td>
+                            <td>{{ exercise.muscleGroup }}</td>
+                            <td>{{ exercise.plannedSets }}</td>
+                            <td>{{ exercise.minReps }}–{{ exercise.maxReps }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                } @else {
+                <p>Dieser Trainingsplan enthält noch keine Übungen.</p>
+                }
+            </div>
+            }
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+    <!-- Hauptzeile: Klick klappt Details auf oder zu -->
+    <tr mat-row *matRowDef="let workout; columns: displayedColumns" class="workout-row"
+        [class.expanded-row]="expandedWorkoutId() === workout.id" (click)="toggleExpandedWorkout(workout.id)">
+    </tr>
+
+    <!-- Detailzeile -->
+    <tr mat-row *matRowDef="let workout; columns: ['expandedDetail']" class="detail-row"
+        [class.detail-row-hidden]="expandedWorkoutId() !== workout.id">
+    </tr>
+
+    <!-- Leere Liste -->
+    <tr *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">
+            Noch keine Trainingspläne vorhanden.
+        </td>
+    </tr>
+
+</table>
