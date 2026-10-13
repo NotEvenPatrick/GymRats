@@ -60,7 +60,7 @@ export class ExerciseForm {
 
     request$.subscribe({
       next: () => { this.notificationService.success('Übung erfolgreich gespeichert'); this.dialogRef.close(true); },
-      error: err => this.notificationService.error('Fehler beim Speichern der Übung')
+      error: () => this.notificationService.error('Fehler beim Speichern der Übung')
     });
   }
 }

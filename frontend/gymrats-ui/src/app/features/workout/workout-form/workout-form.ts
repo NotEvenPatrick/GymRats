@@ -10,8 +10,6 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn, Validators,
-  FormGroupDirective,
-  NgForm
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ExerciseService } from '../../exercise/services/exercise-service';
@@ -27,7 +25,7 @@ import { WorkoutService } from '../services/workout-service';
 import { WorkoutRequest } from '../models/workout-request';
 
 class TouchedErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: AbstractControl | null): boolean {
     return !!control && control.invalid && control.touched;
   }
 }

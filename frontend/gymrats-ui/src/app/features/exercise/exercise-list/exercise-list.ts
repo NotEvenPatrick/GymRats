@@ -51,7 +51,7 @@ export class ExerciseList {
             this.notificationService.success('Übung erfolgreich gelöscht'); 
             this.loadExercises();
           },
-          error: err => {
+          error: () => {
             this.notificationService.error('Fehler beim Löschen der Übung');
           }
         });
@@ -62,7 +62,7 @@ export class ExerciseList {
   private loadExercises(): void {
     this.exerciseService.getAll().subscribe({
       next: exercises => this.exercises.set(exercises),
-      error: err => this.notificationService.error('Fehler beim Laden der Übungen')
+      error: () => this.notificationService.error('Fehler beim Laden der Übungen')
     });
   }
 }
