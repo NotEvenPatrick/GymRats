@@ -29,10 +29,14 @@ export class WorkoutList {
     this.loadWorkouts();
   }
 
+  createWorkout(): void {
+    this.router.navigate(['/workouts', 'new']);
+  }
+
   editWorkout(workoutId: string): void {
     this.router.navigate(['/workouts', workoutId, 'edit']);
   }
-
+  
   deleteWorkout(workoutId: string): void {
     this.dialog.open(ConfirmDialog, {
       data: {
