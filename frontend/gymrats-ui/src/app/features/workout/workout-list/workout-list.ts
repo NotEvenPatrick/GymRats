@@ -36,6 +36,10 @@ export class WorkoutList {
   editWorkout(workoutId: string): void {
     this.router.navigate(['/workouts', workoutId, 'edit']);
   }
+
+  startSession(workoutId: string): void {
+    this.router.navigate(['/sessions', 'start', workoutId]);
+  }
   
   deleteWorkout(workoutId: string): void {
     this.dialog.open(ConfirmDialog, {

@@ -6,6 +6,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { ExerciseList } from './features/exercise/exercise-list/exercise-list';
 import { WorkoutList } from './features/workout/workout-list/workout-list';
 import { WorkoutForm } from './features/workout/workout-form/workout-form';
+import { Session } from './features/session/session/session';
 
 export const routes: Routes = [
     {
@@ -34,6 +35,11 @@ export const routes: Routes = [
     {
         path: 'workouts/:id/edit',
         component: WorkoutForm,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'sessions/start/:workoutId',
+        component: Session,
         canActivate: [authGuard],
     },
     {
