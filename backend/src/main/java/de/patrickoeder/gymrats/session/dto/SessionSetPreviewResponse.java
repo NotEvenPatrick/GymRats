@@ -4,9 +4,8 @@ import java.math.BigDecimal;
 
 public class SessionSetPreviewResponse {
     private int setNumber;
-    private BigDecimal weight;
+    private BigDecimal weight = BigDecimal.ZERO;
     private Integer reps;
-    private boolean completed;
 
     public int getSetNumber() {
         return setNumber;
@@ -30,13 +29,5 @@ public class SessionSetPreviewResponse {
 
     public void setReps(Integer reps) {
         this.reps = reps;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 }

@@ -14,13 +14,13 @@ public class SessionSetRequest {
     @Min(1)
     private Integer setNumber;
 
+    @NotNull
     @PositiveOrZero
     private BigDecimal weight;
 
+    @NotNull
     @Positive
     private Integer reps;
-
-    private boolean completed;
 
     public Integer getSetNumber() {
         return setNumber;
@@ -44,13 +44,5 @@ public class SessionSetRequest {
 
     public void setReps(Integer reps) {
         this.reps = reps;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 }

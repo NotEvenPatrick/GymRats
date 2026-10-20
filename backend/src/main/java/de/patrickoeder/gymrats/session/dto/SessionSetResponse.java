@@ -8,7 +8,6 @@ public class SessionSetResponse {
     private Integer setNumber;
     private BigDecimal weight;
     private Integer reps;
-    private boolean completed;
 
     public UUID getId() {
         return id;
@@ -41,13 +40,4 @@ public class SessionSetResponse {
     public void setReps(Integer reps) {
         this.reps = reps;
     }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
 }

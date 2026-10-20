@@ -30,13 +30,13 @@ public class SessionSet {
     @Min(1)
     private Integer setNumber;
 
-    @Positive
-    private BigDecimal weight;
-
+    @NotNull
     @PositiveOrZero
-    private Integer reps;
+    private BigDecimal weight = BigDecimal.ZERO;
 
-    private boolean completed;
+    @NotNull
+    @Positive 
+    private Integer reps;
 
     public UUID getId() {
         return id;
@@ -72,13 +72,5 @@ public class SessionSet {
 
     public void setReps(Integer reps) {
         this.reps = reps;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 }

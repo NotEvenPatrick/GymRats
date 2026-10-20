@@ -1,5 +1,6 @@
 package de.patrickoeder.gymrats.session;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -115,11 +116,12 @@ public class SessionService {
         response.setPlannedSets(workoutExercise.getPlannedSets());
         response.setMinReps(workoutExercise.getMinReps());
         response.setMaxReps(workoutExercise.getMaxReps());
-        response.setStatus(SessionExerciseStatus.NOT_STARTED);
+        response.setStatus(SessionExerciseStatus.PENDING);
         ArrayList<SessionSetPreviewResponse> sets = new ArrayList<>();
         for (int i = 0; i < workoutExercise.getPlannedSets(); i++) {
             SessionSetPreviewResponse set = new SessionSetPreviewResponse();
             set.setSetNumber(i + 1);
+            set.setWeight(BigDecimal.ZERO);
             sets.add(set);
         }
         response.setSets(sets);
@@ -168,7 +170,6 @@ public class SessionService {
         response.setSetNumber(sessionSet.getSetNumber());
         response.setReps(sessionSet.getReps());
         response.setWeight(sessionSet.getWeight());
-        response.setCompleted(sessionSet.isCompleted());
         return response;
     }
 
@@ -196,7 +197,6 @@ public class SessionService {
         sessionSet.setSetNumber(request.getSetNumber());
         sessionSet.setReps(request.getReps());
         sessionSet.setWeight(request.getWeight());
-        sessionSet.setCompleted(request.isCompleted());
         return sessionSet;
     }
 
