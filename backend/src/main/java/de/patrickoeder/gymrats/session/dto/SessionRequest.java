@@ -7,16 +7,12 @@ import java.util.UUID;
 
 import de.patrickoeder.gymrats.session.SessionStatus;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public class SessionRequest {
     @NotNull
     private UUID sourceWorkoutId;
-
-    @NotBlank
-    private String workoutName;
 
     @NotNull
     private Instant startedAt;
@@ -34,14 +30,6 @@ public class SessionRequest {
 
     public void setSourceWorkoutId(UUID sourceWorkoutId) {
         this.sourceWorkoutId = sourceWorkoutId;
-    }
-
-    public String getWorkoutName() {
-        return workoutName;
-    }
-
-    public void setWorkoutName(String workoutName) {
-        this.workoutName = workoutName;
     }
 
     public Instant getStartedAt() {
