@@ -22,7 +22,6 @@ export interface SessionExercisePreview {
 
 export interface SessionSetPreview {
     setNumber: number;
-    weight: number | null;
+    weight: number;
     reps: number | null;
-    completed: boolean;
 }
