@@ -1,0 +1,65 @@
+<a mat-button routerLink="/sessions">Zur Trainingshistorie</a>
+
+@if (loading()) {
+<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+}
+@if (error(); as errorMessage) {
+<p role="alert">{{ errorMessage }}</p>
+} @else if (session(); as details) {
+<h1>
+    {{ details.workoutName }}
+    ({{ details.status === 'COMPLETED' ? 'Abgeschlossen' : 'Abgebrochen' }})
+</h1>
+
+<mat-card>
+    <p>
+        <strong>Beginn:</strong>
+        {{ details.startedAt | date:'dd.MM.yyyy, HH:mm' }}
+    </p>
+    <p>
+        <strong>Ende:</strong>
+        {{ details.endedAt | date:'dd.MM.yyyy, HH:mm' }}
+    </p>
+</mat-card>
+
+<h2>Übungen</h2>
+
+@for (exercise of details.sessionExercises; track exercise.id) {
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ exercise.position }}. {{ exercise.exerciseName }}</mat-card-title>
+        <mat-card-subtitle>{{ exercise.muscleGroup }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <p>
+            Geplant: {{ exercise.plannedSets }} Sätze,
+            {{ exercise.minReps}} - {{ exercise.maxReps }} Wiederholungen
+        </p>
+
+        @if(exercise.sets.length > 0) {
+        <table>
+            <thead>
+                <tr>
+                    <th>Satz</th>
+                    <th>Gewicht</th>
+                    <th>Wiederholungen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (set of exercise.sets; track set.setNumber) {
+                <tr>
+                    <td>{{ set.setNumber }}</td>
+                    <td>{{ set.weight }}</td>
+                    <td>{{ set.reps }}</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        } @else {
+        <p>Für diese Übung wurden keine Sätze gespeichert.</p>
+        }
+    </mat-card-content>
+</mat-card>
+}
+}

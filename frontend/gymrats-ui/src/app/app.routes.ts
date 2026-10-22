@@ -6,8 +6,9 @@ import { authGuard } from './core/guards/auth-guard';
 import { ExerciseList } from './features/exercise/exercise-list/exercise-list';
 import { WorkoutList } from './features/workout/workout-list/workout-list';
 import { WorkoutForm } from './features/workout/workout-form/workout-form';
-import { Session } from './features/session/session/session';
+import { SessionForm } from './features/session/session-form/session-form';
 import { SessionHistory } from './features/session/session-history/session-history';
+import { SessionDetails } from './features/session/session-details/session-details';
 
 export const routes: Routes = [
     {
@@ -44,8 +45,13 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
     {
+        path: 'sessions/:id',
+        component: SessionDetails,
+        canActivate: [authGuard],
+    },
+    {
         path: 'sessions/start/:workoutId',
-        component: Session,
+        component: SessionForm,
         canActivate: [authGuard],
     },
     {

@@ -17,24 +17,24 @@ type SessionSetForm = FormGroup<{
   reps: FormControl<number | null>;
 }>;
 
-type SessionForm = FormGroup<{
+type SessionFormGroup = FormGroup<{
   sessionExercises: FormArray<FormArray<SessionSetForm>>
 }>
 
 @Component({
   imports: [MatProgressSpinnerModule, MatCardModule, MatButtonModule, MatIconModule, ReactiveFormsModule],
-  selector: 'app-session',
-  styleUrl: './session.scss',
-  templateUrl: './session.html',
+  selector: 'app-session-form',
+  styleUrl: './session-form.scss',
+  templateUrl: './session-form.html',
 })
-export class Session {
+export class SessionForm {
   activeSession = signal<SessionPreview | null>(null);
   loading = signal<boolean>(true);
   saving = signal<boolean>(false);
   saveError = signal<string | null>(null);
   savedSessionId = signal<string | null>(null);
 
-  sessionForm: SessionForm = new FormGroup({
+  sessionForm: SessionFormGroup = new FormGroup({
     sessionExercises: new FormArray<FormArray<SessionSetForm>>([])
   });
 

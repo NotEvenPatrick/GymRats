@@ -2,11 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterLink } from '@angular/router';
 import { SessionSummary } from '../models/session-summary';
 import { SessionService } from '../services/session-service';
 
 @Component({
-  imports: [DatePipe, MatCardModule, MatProgressSpinnerModule],
+  imports: [DatePipe, MatCardModule, MatProgressSpinnerModule, RouterLink],
   selector: 'app-session-history',
   styleUrl: './session-history.scss',
   templateUrl: './session-history.html',
@@ -38,5 +39,5 @@ export class SessionHistory {
     });
   }
 
-  
+
 }

@@ -11,16 +11,19 @@
 } @else {
 <div class="session-history-list">
     @for(session of sessions(); track session.id) {
-    <mat-card class="session-card">
-        <mat-card-header>
-            <mat-card-title>{{ session.workoutName }}</mat-card-title>
-            <mat-card-subtitle>{{ session.startedAt | date:'dd.MM.yyyy, HH:mm' }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-            <p>Status: {{ session.status === 'COMPLETED' ? 'Abgeschlossen' : 'Abgebrochen' }} </p>
-            <p>Übungen: {{ session.exerciseCount }}</p>
-        </mat-card-content>
-    </mat-card>
+    <a class="session-card-link" [routerLink]="['/sessions', session.id]"
+        [attr.aria-label]="'Details für ' + session.workoutName + ' öffnen'">
+        <mat-card class="session-card">
+            <mat-card-header>
+                <mat-card-title>{{ session.workoutName }}</mat-card-title>
+                <mat-card-subtitle>{{ session.startedAt | date:'dd.MM.yyyy, HH:mm' }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p>Status: {{ session.status === 'COMPLETED' ? 'Abgeschlossen' : 'Abgebrochen' }} </p>
+                <p>Übungen: {{ session.exerciseCount }}</p>
+            </mat-card-content>
+        </mat-card>
+    </a>
     }
 </div>
 }
