@@ -50,6 +50,14 @@ export class SessionForm {
     this.loadActiveSession();
   }
 
+  get isFinishDisabled(): boolean {
+    return this.saving() || this.savedSessionId() !== null || !this.areAllSetsFilled();
+  }
+
+  get isCancelDisabled(): boolean {
+    return this.saving() || this.savedSessionId() !== null;
+  }
+
   finishSession(): void {
     const dialogRef = this.dialog.open<ConfirmDialog, ConfirmDialogData, ConfirmDialogResult>(ConfirmDialog, {
       data: {
@@ -72,7 +80,7 @@ export class SessionForm {
       data: {
         title: 'Training abbrechen?',
         message:
-          'Möchtest du deine bisherige Trainingseinheit speichern oder verwerfen?',
+          'Möchtest du deine bisherige Trainingseinheit speichern oder verwerfen? Nicht abgeschlossene Sätze werden nicht gespeichert.',
         cancelButtonText: 'Weiter trainieren',
         confirmButtonText: 'Abbrechen und speichern',
         discardButtonText: 'Abbrechen und verwerfen',
@@ -90,6 +98,23 @@ export class SessionForm {
 
   navigateToWorkouts(): void {
     this.router.navigate(['/workouts']);
+  }
+
+  areAllSetsFilled(): boolean {
+    const exerciseFormArrays =
+      this.sessionForm.controls.sessionExercises.controls;
+
+    if (exerciseFormArrays.length === 0) {
+      return false;
+    }
+
+    return exerciseFormArrays.every((exerciseSets) =>
+      exerciseSets.controls.length > 0 && exerciseSets.controls.every((set) => {
+        const reps = set.controls.reps.value;
+
+        return reps !== null && set.controls.reps.valid;
+      })
+    );
   }
 
   private initializeForm(session: SessionPreview): void {
@@ -146,7 +171,7 @@ export class SessionForm {
         const sets: SessionSetRequest[] = [];
 
         formSets.forEach((set) => {
-          if (set.reps === null) {
+          if (set.weight === null || set.reps === null) {
             return;
           }
 
@@ -183,6 +208,11 @@ export class SessionForm {
     this.sessionForm.markAllAsTouched();
     if (this.sessionForm.invalid) {
       this.saveError.set('Bitte überprüfe deine Eingaben.');
+      return;
+    }
+
+    if (status === SessionStatus.COMPLETED && !this.areAllSetsFilled()) {
+      this.saveError.set('Bitte fülle alle Sätze aus, bevor du das Training beendest.');
       return;
     }
 

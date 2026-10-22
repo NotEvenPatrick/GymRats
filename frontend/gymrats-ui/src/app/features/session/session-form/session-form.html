@@ -36,12 +36,11 @@
         }
     </div>
     <div class="session-actions">
-        <button mat-raised-button color="primary" type="button" (click)="finishSession()"
-            [disabled]="saving() || savedSessionId() !== null">
+        <button mat-raised-button color="primary" type="button" (click)="finishSession()" [disabled]="isFinishDisabled">
             Session beenden
         </button>
-        <button mat-raised-button color="warn" type="button" (click)="cancelSession()"
-            [disabled]="saving() || savedSessionId() !== null">
+
+        <button mat-raised-button color="warn" type="button" (click)="cancelSession()" [disabled]="isCancelDisabled">
             Session abbrechen
         </button>
     </div>
