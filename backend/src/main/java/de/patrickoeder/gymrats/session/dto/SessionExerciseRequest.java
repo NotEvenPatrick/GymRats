@@ -3,7 +3,6 @@ package de.patrickoeder.gymrats.session.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import de.patrickoeder.gymrats.session.SessionExerciseStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -30,9 +29,6 @@ public class SessionExerciseRequest {
     @NotNull
     @Min(1)
     private Integer maxReps;
-
-    @NotNull
-    private SessionExerciseStatus status;
 
     @NotNull
     @Valid
@@ -76,14 +72,6 @@ public class SessionExerciseRequest {
 
     public void setMaxReps(Integer maxReps) {
         this.maxReps = maxReps;
-    }
-
-    public SessionExerciseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionExerciseStatus status) {
-        this.status = status;
     }
 
     public List<SessionSetRequest> getSets() {

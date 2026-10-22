@@ -61,10 +61,6 @@ public class SessionExercise {
     private Integer maxReps;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private SessionExerciseStatus status;
-
-    @NotNull
     @Valid
     @OneToMany(mappedBy = "sessionExercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SessionSet> sets = new ArrayList<>();
@@ -135,14 +131,6 @@ public class SessionExercise {
 
     public void setMaxReps(Integer maxReps) {
         this.maxReps = maxReps;
-    }
-
-    public SessionExerciseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionExerciseStatus status) {
-        this.status = status;
     }
 
     public List<SessionSet> getSets() {

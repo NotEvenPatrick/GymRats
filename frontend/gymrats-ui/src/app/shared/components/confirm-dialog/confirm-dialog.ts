@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
+export type ConfirmDialogResult = boolean | 'discard';
+
 @Component({
   imports: [MatDialogModule, MatButtonModule],
   selector: 'app-confirm-dialog',
@@ -11,6 +13,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 export class ConfirmDialog {
   protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef);
+  discardButtonText?: string;
 
   cancel(): void {
     this.dialogRef.close(false);
@@ -19,6 +22,10 @@ export class ConfirmDialog {
   confirm(): void {
     this.dialogRef.close(true);
   }
+
+  discard(): void {
+    this.dialogRef.close('discard');
+  }
 }
 
 export interface ConfirmDialogData {
@@ -26,4 +33,5 @@ export interface ConfirmDialogData {
   message: string;
   confirmButtonText: string;
   cancelButtonText: string;
+  discardButtonText?: string;
 }

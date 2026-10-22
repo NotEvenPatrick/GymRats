@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import de.patrickoeder.gymrats.exercise.MuscleGroup;
-import de.patrickoeder.gymrats.session.SessionExerciseStatus;
 
 public class SessionExerciseResponse {
     private UUID id;
@@ -15,7 +14,6 @@ public class SessionExerciseResponse {
     private Integer plannedSets;
     private Integer minReps;
     private Integer maxReps;
-    private SessionExerciseStatus status;
     private List<SessionSetResponse> sets = new ArrayList<>();
 
     public UUID getId() {
@@ -80,14 +78,6 @@ public class SessionExerciseResponse {
 
     public void setMaxReps(Integer maxReps) {
         this.maxReps = maxReps;
-    }
-
-    public SessionExerciseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionExerciseStatus status) {
-        this.status = status;
     }
 
     public List<SessionSetResponse> getSets() {

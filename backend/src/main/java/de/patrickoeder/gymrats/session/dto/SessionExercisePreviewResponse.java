@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import de.patrickoeder.gymrats.exercise.MuscleGroup;
-import de.patrickoeder.gymrats.session.SessionExerciseStatus;
 import jakarta.validation.constraints.AssertTrue;
 
 public class SessionExercisePreviewResponse {
@@ -16,7 +15,6 @@ public class SessionExercisePreviewResponse {
     private int plannedSets;
     private int minReps;
     private int maxReps;
-    private SessionExerciseStatus status;
     private List<SessionSetPreviewResponse> sets = new ArrayList<>();
 
     public UUID getSourceExerciseId() {
@@ -73,14 +71,6 @@ public class SessionExercisePreviewResponse {
 
     public void setMaxReps(int maxReps) {
         this.maxReps = maxReps;
-    }
-
-    public SessionExerciseStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionExerciseStatus status) {
-        this.status = status;
     }
 
     public List<SessionSetPreviewResponse> getSets() {

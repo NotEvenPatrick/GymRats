@@ -4,4 +4,5 @@ export interface SessionSummary {
     startedAt: string;
     endedAt: string;
     status: string;
+    exerciseCount: number;
 }

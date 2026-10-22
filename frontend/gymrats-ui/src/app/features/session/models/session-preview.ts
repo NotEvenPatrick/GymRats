@@ -1,5 +1,4 @@
 import { MuscleGroup } from "../../exercise/models/muscle-group";
-import { SessionExerciseStatus } from "./status";
 
 export interface SessionPreview {
     sourceWorkoutId: string;
@@ -16,7 +15,6 @@ export interface SessionExercisePreview {
     plannedSets: number;
     minReps: number;
     maxReps: number;
-    status: SessionExerciseStatus;
     sets: SessionSetPreview[];
 }
 

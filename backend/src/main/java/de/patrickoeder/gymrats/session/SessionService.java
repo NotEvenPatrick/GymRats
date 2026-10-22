@@ -116,7 +116,6 @@ public class SessionService {
         response.setPlannedSets(workoutExercise.getPlannedSets());
         response.setMinReps(workoutExercise.getMinReps());
         response.setMaxReps(workoutExercise.getMaxReps());
-        response.setStatus(SessionExerciseStatus.PENDING);
         ArrayList<SessionSetPreviewResponse> sets = new ArrayList<>();
         for (int i = 0; i < workoutExercise.getPlannedSets(); i++) {
             SessionSetPreviewResponse set = new SessionSetPreviewResponse();
@@ -155,7 +154,6 @@ public class SessionService {
         response.setPlannedSets(sessionExercise.getPlannedSets());
         response.setMinReps(sessionExercise.getMinReps());
         response.setMaxReps(sessionExercise.getMaxReps());
-        response.setStatus(sessionExercise.getStatus());
         response.setSets(
                 sessionExercise.getSets().stream()
                         .sorted(Comparator.comparing(SessionSet::getSetNumber))
@@ -185,7 +183,6 @@ public class SessionService {
         sessionExercise.setPlannedSets(request.getPlannedSets());
         sessionExercise.setMinReps(request.getMinReps());
         sessionExercise.setMaxReps(request.getMaxReps());
-        sessionExercise.setStatus(request.getStatus());
         for (SessionSetRequest setRequest : request.getSets()) {
             sessionExercise.addSet(toEntity(setRequest));
         }

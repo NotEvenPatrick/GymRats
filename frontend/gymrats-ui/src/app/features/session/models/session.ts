@@ -1,4 +1,4 @@
-import { SessionStatus, SessionExerciseStatus } from "./status";
+import { SessionStatus } from "./status";
 
 export interface Session {
     id: string;
@@ -19,7 +19,6 @@ export interface SessionExercise {
     plannedSets: number;
     minReps: number;
     maxReps: number;
-    status: SessionExerciseStatus;
     sets: SessionSet[];
 }
 

@@ -7,6 +7,7 @@ import { ExerciseList } from './features/exercise/exercise-list/exercise-list';
 import { WorkoutList } from './features/workout/workout-list/workout-list';
 import { WorkoutForm } from './features/workout/workout-form/workout-form';
 import { Session } from './features/session/session/session';
+import { SessionHistory } from './features/session/session-history/session-history';
 
 export const routes: Routes = [
     {
@@ -35,6 +36,11 @@ export const routes: Routes = [
     {
         path: 'workouts/:id/edit',
         component: WorkoutForm,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'sessions',
+        component: SessionHistory,
         canActivate: [authGuard],
     },
     {

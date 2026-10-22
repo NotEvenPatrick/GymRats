@@ -6,9 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   imports: [
-    MatToolbarModule, 
-    MatButtonModule, 
-    RouterLink, 
+    MatToolbarModule,
+    MatButtonModule,
+    RouterLink,
     RouterLinkActive
   ],
   selector: 'app-header',
@@ -17,11 +17,12 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class Header {
   private authService: AuthService = inject(AuthService);
-  private router: Router = inject(Router); 
+  private router: Router = inject(Router);
 
   protected readonly navItems: { label: string; route: string }[] = [
     { label: 'Home', route: '/home' },
     { label: 'Trainingspläne', route: '/workouts' },
+    { label: 'Trainingshistorie', route: '/sessions' },
     { label: 'Übungen', route: '/exercises' },
   ];
 

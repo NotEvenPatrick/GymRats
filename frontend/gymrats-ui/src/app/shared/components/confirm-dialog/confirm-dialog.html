@@ -9,6 +9,12 @@
         {{ data.cancelButtonText }}
     </button>
 
+    @if(data.discardButtonText) {
+    <button mat-button type="button" (click)="discard()">
+        {{ data.discardButtonText }}
+    </button>
+    }
+
     <button mat-button color="warn" type="button" (click)="confirm()">
         {{ data.confirmButtonText }}
     </button>
