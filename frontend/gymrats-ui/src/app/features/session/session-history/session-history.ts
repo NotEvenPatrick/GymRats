@@ -4,10 +4,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { SessionSummary } from '../models/session-summary';
+import { SessionStatusLabelPipe } from '../pipes/session-status-label-pipe';
 import { SessionService } from '../services/session-service';
 
 @Component({
-  imports: [DatePipe, MatCardModule, MatProgressSpinnerModule, RouterLink],
+  imports: [DatePipe, SessionStatusLabelPipe, MatCardModule, MatProgressSpinnerModule, RouterLink],
   selector: 'app-session-history',
   styleUrl: './session-history.scss',
   templateUrl: './session-history.html',

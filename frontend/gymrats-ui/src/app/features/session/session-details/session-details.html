@@ -8,7 +8,7 @@
 } @else if (session(); as details) {
 <h1>
     {{ details.workoutName }}
-    ({{ details.status === 'COMPLETED' ? 'Abgeschlossen' : 'Abgebrochen' }})
+    ({{ details.status | sessionStatusLabel }})
 </h1>
 
 <mat-card>

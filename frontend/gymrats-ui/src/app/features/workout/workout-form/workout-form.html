@@ -59,8 +59,8 @@
                             </mat-autocomplete>
 
                             @if (
-                            row.controls['exerciseId'].hasError('required')
-                            && row.controls['exerciseId'].touched
+                            row.controls.exerciseId.hasError('required')
+                            && row.controls.exerciseId.touched
                             ) {
                             <mat-error>Bitte wähle eine Übung aus der Vorschlagsliste.</mat-error>
                             }
@@ -71,11 +71,11 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Geplante Sätze</mat-label>
                             <input matInput formControlName="plannedSets" type="number" min="1">
-                            @if (row.controls['plannedSets'].hasError('required') &&
-                            row.controls['plannedSets'].touched) {
+                            @if (row.controls.plannedSets.hasError('required') &&
+                            row.controls.plannedSets.touched) {
                             <mat-error>Bitte gib die geplanten Sätze an.</mat-error>
                             }
-                            @if (row.controls['plannedSets'].hasError('min') && row.controls['plannedSets'].touched) {
+                            @if (row.controls.plannedSets.hasError('min') && row.controls.plannedSets.touched) {
                             <mat-error>Die geplanten Sätze müssen mindestens 1 betragen.</mat-error>
                             }
                         </mat-form-field>
@@ -85,10 +85,10 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Min. Wdh.</mat-label>
                             <input matInput formControlName="minReps" type="number" min="1">
-                            @if (row.controls['minReps'].hasError('required') && row.controls['minReps'].touched) {
+                            @if (row.controls.minReps.hasError('required') && row.controls.minReps.touched) {
                             <mat-error>Bitte gib die minimale Wiederholungszahl an.</mat-error>
                             }
-                            @if (row.controls['minReps'].hasError('min') && row.controls['minReps'].touched) {
+                            @if (row.controls.minReps.hasError('min') && row.controls.minReps.touched) {
                             <mat-error>Die minimale Wiederholungszahl muss mindestens 1 betragen.</mat-error>
                             }
                         </mat-form-field>
@@ -97,15 +97,15 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Max. Wdh.</mat-label>
                             <input matInput formControlName="maxReps" type="number" min="1">
-                            @if (row.controls['maxReps'].hasError('required') && row.controls['maxReps'].touched) {
+                            @if (row.controls.maxReps.hasError('required') && row.controls.maxReps.touched) {
                             <mat-error>Bitte gib die maximale Wiederholungszahl an.</mat-error>
                             }
-                            @if (row.controls['maxReps'].hasError('min') && row.controls['maxReps'].touched) {
+                            @if (row.controls.maxReps.hasError('min') && row.controls.maxReps.touched) {
                             <mat-error>Die maximale Wiederholungszahl muss mindestens 1 betragen.</mat-error>
                             }
                         </mat-form-field>
-                        @if (row.hasError('invalidRepetitionRange') && (row.controls['minReps'].touched ||
-                        row.controls['maxReps'].touched)) {
+                        @if (row.hasError('invalidRepetitionRange') && (row.controls.minReps.touched ||
+                        row.controls.maxReps.touched)) {
                         <mat-error>Min. Wdh. darf nicht größer als Max. Wdh. sein.</mat-error>
                         }
                     </td>

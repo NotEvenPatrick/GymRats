@@ -16,9 +16,9 @@ export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  form: FormGroup = new FormGroup({
-    email: new FormControl<string>('', [Validators.required, Validators.email]),
-    password: new FormControl<string>('', Validators.required),
+  form = new FormGroup({
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    password: new FormControl('', { nonNullable: true, validators: Validators.required }),
   });
 
   saving = signal(false);
@@ -36,7 +36,7 @@ export class Login {
     this.saving.set(true);
     this.errorMessage.set(null);
 
-    const loginRequest: LoginRequest = this.form.value as LoginRequest;
+    const loginRequest: LoginRequest = this.form.getRawValue();
     this.authService.login(loginRequest).subscribe({
       next: () => {
         this.router.navigate(['/home']);

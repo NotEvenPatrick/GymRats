@@ -24,6 +24,14 @@ import { CdkDrag, CdkDragHandle, CdkDropList, CdkDragDrop } from '@angular/cdk/d
 import { WorkoutService } from '../services/workout-service';
 import { WorkoutRequest } from '../models/workout-request';
 
+type ExerciseRowForm = FormGroup<{
+  exerciseId: FormControl<string | null>;
+  exerciseSearch: FormControl<string | Exercise>;
+  plannedSets: FormControl<number | null>;
+  minReps: FormControl<number | null>;
+  maxReps: FormControl<number | null>;
+}>;
+
 class TouchedErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: AbstractControl | null): boolean {
     return !!control && control.invalid && control.touched;
@@ -53,7 +61,7 @@ export class WorkoutForm {
   form = new FormGroup({
     name: new FormControl('', { validators: Validators.required, nonNullable: true }),
     description: new FormControl('', { nonNullable: true }),
-    exercises: new FormArray<FormGroup>([], Validators.required)
+    exercises: new FormArray<ExerciseRowForm>([], Validators.required)
   });
 
   exercises = signal<Exercise[]>([]);
@@ -67,7 +75,7 @@ export class WorkoutForm {
   private workoutService: WorkoutService = inject(WorkoutService);
   private notificationService: NotificationService = inject(NotificationService);
 
-  get exerciseRows(): FormArray<FormGroup> {
+  get exerciseRows(): FormArray<ExerciseRowForm> {
     return this.form.controls.exercises;
   }
 
@@ -83,20 +91,14 @@ export class WorkoutForm {
   }
 
   addExerciseRow(): void {
-    this.exerciseRows.push(new FormGroup({
-      exerciseId: new FormControl<string | null>(null, Validators.required),
-      exerciseSearch: new FormControl<string | Exercise>('', { nonNullable: true }),
-      plannedSets: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-      minReps: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-      maxReps: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
-    }, { validators: this.repetitionRangeValidator }));
+    this.exerciseRows.push(this.createExerciseRow());
   }
 
   removeExerciseRow(index: number): void {
     this.exerciseRows.removeAt(index);
   }
 
-  drop(event: CdkDragDrop<FormGroup[]>): void {
+  drop(event: CdkDragDrop<ExerciseRowForm[]>): void {
     if (event.previousIndex === event.currentIndex) {
       return;
     }
@@ -110,8 +112,8 @@ export class WorkoutForm {
     this.exerciseRows.markAsDirty();
   }
 
-  getFilteredExercises(row: FormGroup): Exercise[] {
-    const value = row.get('exerciseSearch')?.value;
+  getFilteredExercises(row: ExerciseRowForm): Exercise[] {
+    const value = row.controls.exerciseSearch.value;
     const searchTerm = typeof value === 'string' ? value.toLowerCase() : '';
 
     return this.exercises().filter(exercise => exercise.name.toLowerCase().includes(searchTerm));
@@ -125,13 +127,13 @@ export class WorkoutForm {
     return typeof value === 'string' ? value : value.name;
   }
 
-  onExerciseSelected(row: FormGroup, exercise: Exercise): void {
-    row.get('exerciseId')?.setValue(exercise.id);
+  onExerciseSelected(row: ExerciseRowForm, exercise: Exercise): void {
+    row.controls.exerciseId.setValue(exercise.id);
   }
 
-  onExerciseSearchInput(row: FormGroup): void {
-    row.get('exerciseId')?.setValue(null);
-    row.get('exerciseSearch')?.markAsUntouched();
+  onExerciseSearchInput(row: ExerciseRowForm): void {
+    row.controls.exerciseId.setValue(null);
+    row.controls.exerciseSearch.markAsUntouched();
   }
 
   cancel(): void {
@@ -153,18 +155,21 @@ export class WorkoutForm {
     const request: WorkoutRequest = {
       name: formValue.name.trim(),
       description: formValue.description.trim(),
-      exercises: this.exerciseRows.controls.map((row, index) => {
-        const exercise = row.getRawValue();
+      exercises: this.exerciseRows.controls.flatMap((row, index) => {
+        const { exerciseId, plannedSets, minReps, maxReps } = row.getRawValue();
 
-        return {
-          exerciseId: exercise.exerciseId,
-          position: index + 1,
-          plannedSets: exercise.plannedSets,
-          minReps: exercise.minReps,
-          maxReps: exercise.maxReps,
+        if (exerciseId === null || plannedSets === null || minReps === null || maxReps === null) {
+          return [];
         }
+
+        return [{ exerciseId, position: index + 1, plannedSets, minReps, maxReps }];
       })
     };
+
+    if (request.exercises.length !== this.exerciseRows.length) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     const request$ = this.workoutId
       ? this.workoutService.update(this.workoutId, request)
@@ -219,6 +224,16 @@ export class WorkoutForm {
         this.router.navigate(['/workouts']);
       }
     });
+  }
+
+  private createExerciseRow(): ExerciseRowForm {
+    return new FormGroup({
+      exerciseId: new FormControl<string | null>(null, Validators.required),
+      exerciseSearch: new FormControl<string | Exercise>('', { nonNullable: true }),
+      plannedSets: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
+      minReps: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
+      maxReps: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
+    }, { validators: this.repetitionRangeValidator });
   }
 
   private repetitionRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {

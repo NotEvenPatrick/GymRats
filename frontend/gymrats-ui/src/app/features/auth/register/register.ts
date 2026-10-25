@@ -16,11 +16,11 @@ export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  form: FormGroup = new FormGroup({
-    firstName: new FormControl<string>('', Validators.required),
-    lastName: new FormControl<string>('', Validators.required),
-    email: new FormControl<string>('', [ Validators.required, Validators.email]),
-    password: new FormControl<string>('', [Validators.required, Validators.minLength(8)]),
+  form = new FormGroup({
+    firstName: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    lastName: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(8)] }),
   });
 
   saving = signal(false);
@@ -38,7 +38,7 @@ export class Register {
     this.saving.set(true);
     this.errorMessage.set(null);
 
-    const registerRequest: RegisterRequest = this.form.value as RegisterRequest;
+    const registerRequest: RegisterRequest = this.form.getRawValue();
     this.authService.register(registerRequest).subscribe({
       next: () => {
         this.router.navigate(['/login']);

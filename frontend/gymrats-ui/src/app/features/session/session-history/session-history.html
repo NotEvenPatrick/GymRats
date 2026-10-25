@@ -19,7 +19,7 @@
                 <mat-card-subtitle>{{ session.startedAt | date:'dd.MM.yyyy, HH:mm' }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                <p>Status: {{ session.status === 'COMPLETED' ? 'Abgeschlossen' : 'Abgebrochen' }} </p>
+                <p>Status: {{ session.status | sessionStatusLabel }}</p>
                 <p>Übungen: {{ session.exerciseCount }}</p>
             </mat-card-content>
         </mat-card>
