@@ -3,7 +3,7 @@ package de.patrickoeder.gymrats.security;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -13,15 +13,13 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 import java.nio.charset.StandardCharsets;
 
-@Configuration 
+@Configuration
+@EnableConfigurationProperties(JwtProperties.class)
 public class JwtConfig {
 
-    @Value("${gymrats.jwt.secret}")
-    private String jwtSecret;
-
     @Bean
-    SecretKey jwtSecretKey() {
-        return new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+    SecretKey jwtSecretKey(JwtProperties properties) {
+        return new SecretKeySpec(properties.secret().getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
 
     @Bean
