@@ -306,7 +306,7 @@ describe('WorkoutForm', () => {
 
     expect(workoutServiceMock.create).toHaveBeenCalled();
     expect(notificationServiceMock.error).toHaveBeenCalledWith(
-      'Fehler beim Speichern des Trainingsplan.'
+      'Fehler beim Speichern des Trainingsplans.'
     );
     expect(notificationServiceMock.success).not.toHaveBeenCalled();
     expect(routerMock.navigate).not.toHaveBeenCalled();

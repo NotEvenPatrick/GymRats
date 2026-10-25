@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Workout } from '../models/workout';
 import { WorkoutService } from '../services/workout-service';
+import { MuscleGroupLabelPipe } from '../../exercise/pipes/muscle-group-label-pipe';
 import { NotificationService } from '../../../core/services/notification-service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
-  imports: [MatTableModule, MatButtonModule, MatIconModule],
+  imports: [MatTableModule, MatButtonModule, MatIconModule, MuscleGroupLabelPipe],
   selector: 'app-workout-list',
   styleUrl: './workout-list.scss',
   templateUrl: './workout-list.html',

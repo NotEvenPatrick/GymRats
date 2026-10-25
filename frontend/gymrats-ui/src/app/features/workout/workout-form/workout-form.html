@@ -129,7 +129,7 @@
         + Übung hinzufügen
     </button>
     <div class="form-actions">
-        <button mat-button type="button" (click)="router.navigate(['/workouts'])">Abbrechen</button>
-        <button mat-flat-button type="submit">Speichern</button>
+        <button mat-button type="button" (click)="cancel()">Abbrechen</button>
+        <button mat-flat-button type="submit" [disabled]="saving()">Speichern</button>
     </div>
 </form>

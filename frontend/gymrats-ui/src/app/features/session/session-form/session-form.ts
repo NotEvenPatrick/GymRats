@@ -30,6 +30,7 @@ type SessionFormGroup = FormGroup<{
 export class SessionForm {
   activeSession = signal<SessionPreview | null>(null);
   loading = signal<boolean>(true);
+  loadError = signal<string | null>(null);
   saving = signal<boolean>(false);
   saveError = signal<string | null>(null);
   savedSessionId = signal<string | null>(null);
@@ -139,19 +140,24 @@ export class SessionForm {
   }
 
   private loadActiveSession(): void {
-    if (this.workoutId) {
-      this.sessionService.prepareSession(this.workoutId).subscribe({
-        next: (session) => {
-          this.activeSession.set(session);
-          this.initializeForm(session);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          console.error('Failed to load session', err);
-          this.loading.set(false);
-        },
-      });
+    if (!this.workoutId) {
+      this.loadError.set('Ungültige Trainingsplan-ID.');
+      this.loading.set(false);
+      return;
     }
+
+    this.sessionService.prepareSession(this.workoutId).subscribe({
+      next: (session) => {
+        this.activeSession.set(session);
+        this.initializeForm(session);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load session', err);
+        this.loadError.set('Das Training konnte nicht geladen werden.');
+        this.loading.set(false);
+      },
+    });
   }
 
   private createSessionRequest(status: SessionStatus): SessionRequest {

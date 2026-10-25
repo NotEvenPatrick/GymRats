@@ -4,12 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { ExerciseForm } from '../exercise-form/exercise-form';
 import { Exercise } from '../models/exercise';
+import { MuscleGroupLabelPipe } from '../pipes/muscle-group-label-pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { NotificationService } from '../../../core/services/notification-service';
 
 @Component({
-  imports: [MatTableModule, MatButtonModule],
+  imports: [MatTableModule, MatButtonModule, MuscleGroupLabelPipe],
   selector: 'app-exercise-list',
   styleUrl: './exercise-list.scss',
   templateUrl: './exercise-list.html',

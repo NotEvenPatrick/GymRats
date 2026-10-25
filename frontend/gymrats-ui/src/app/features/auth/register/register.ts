@@ -24,29 +24,31 @@ export class Register {
   });
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const registerRequest: RegisterRequest = this.form.value as RegisterRequest;
-      this.authService.register(registerRequest).subscribe({
-        next: (response: RegisterResponse) => {
-          console.log('Registration successful:', response);
-          this.router.navigate(['/login']);
-        },
-        error: (error: HttpErrorResponse) => {
-          switch (error.status) {
-            case 400:
-              console.error('Bad Request:', error.error);
-              break;
-            case 401:
-              console.error('Unauthorisiert:', error.error);
-              break;
-            case 409:
-              console.error('Conflict: Diese E-Mail-Adresse ist bereits registriert.');
-              break;
-            default:
-              console.error('Ein unerwarteter Fehler ist aufgetreten:', error);
-          }
-        }
-      });
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
+    const registerRequest: RegisterRequest = this.form.value as RegisterRequest;
+    this.authService.register(registerRequest).subscribe({
+      next: (response: RegisterResponse) => {
+        console.log('Registration successful:', response);
+        this.router.navigate(['/login']);
+      },
+      error: (error: HttpErrorResponse) => {
+        switch (error.status) {
+          case 400:
+            console.error('Bad Request:', error.error);
+            break;
+          case 401:
+            console.error('Unauthorisiert:', error.error);
+            break;
+          case 409:
+            console.error('Conflict: Diese E-Mail-Adresse ist bereits registriert.');
+            break;
+          default:
+            console.error('Ein unerwarteter Fehler ist aufgetreten:', error);
+        }
+      }
+    });
   }
 }

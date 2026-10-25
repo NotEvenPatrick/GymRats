@@ -57,6 +57,7 @@ export class WorkoutForm {
   });
 
   exercises = signal<Exercise[]>([]);
+  saving = signal(false);
 
   protected workoutId: string | null = null;
 
@@ -133,7 +134,15 @@ export class WorkoutForm {
     row.get('exerciseSearch')?.markAsUntouched();
   }
 
+  cancel(): void {
+    this.router.navigate(['/workouts']);
+  }
+
   onSubmit(): void {
+    if (this.saving()) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -161,12 +170,16 @@ export class WorkoutForm {
       ? this.workoutService.update(this.workoutId, request)
       : this.workoutService.create(request);
 
+    this.saving.set(true);
     request$.subscribe({
       next: () => {
         this.notificationService.success('Trainingsplan erfolgreich gespeichert.');
         this.router.navigate(['/workouts']);
       },
-      error: () => this.notificationService.error('Fehler beim Speichern des Trainingsplan.')
+      error: () => {
+        this.saving.set(false);
+        this.notificationService.error('Fehler beim Speichern des Trainingsplans.');
+      }
     });
   }
 

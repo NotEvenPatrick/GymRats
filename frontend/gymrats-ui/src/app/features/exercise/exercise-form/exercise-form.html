@@ -18,7 +18,7 @@
         <textarea matInput formControlName="description"></textarea>
     </mat-form-field>
 
-     <button mat-raised-button color="primary" [disabled]="exerciseForm.invalid" type="submit">
+     <button mat-raised-button color="primary" [disabled]="saving()" type="submit">
         Speichern
     </button>
 </form>

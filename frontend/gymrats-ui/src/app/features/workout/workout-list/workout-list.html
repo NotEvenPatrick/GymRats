@@ -71,7 +71,7 @@
                             <td>
                                 {{ exercise.position }}. {{ exercise.exerciseName }}
                             </td>
-                            <td>{{ exercise.muscleGroup }}</td>
+                            <td>{{ exercise.muscleGroup | muscleGroupLabel }}</td>
                             <td>{{ exercise.plannedSets }}</td>
                             <td>{{ exercise.minReps }}–{{ exercise.maxReps }}</td>
                         </tr>

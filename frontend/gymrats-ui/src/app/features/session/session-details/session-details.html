@@ -28,7 +28,7 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>{{ exercise.position }}. {{ exercise.exerciseName }}</mat-card-title>
-        <mat-card-subtitle>{{ exercise.muscleGroup }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ exercise.muscleGroup | muscleGroupLabel }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
