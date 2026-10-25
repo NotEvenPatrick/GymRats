@@ -1,9 +1,10 @@
 HELP.md
 target/
+data/gymrats.mv.db
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-data/gymrats.mv.db
+
 
 ### STS ###
 .apt_generated
