@@ -3,7 +3,10 @@ package de.patrickoeder.gymrats.session;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.time.Duration;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import java.util.List;
@@ -27,22 +30,21 @@ import de.patrickoeder.gymrats.workout.Workout;
 import de.patrickoeder.gymrats.workout.WorkoutExercise;
 import de.patrickoeder.gymrats.workout.WorkoutRepository;
 import de.patrickoeder.gymrats.exercise.Exercise;
-import de.patrickoeder.gymrats.exercise.ExerciseRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SessionService {
 
+    private static final Duration CLOCK_TOLERANCE = Duration.ofMinutes(1);
+
     private final SessionRepository sessionRepository;
     private final WorkoutRepository workoutRepository;
-    private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
 
     public SessionService(SessionRepository sessionRepository, WorkoutRepository workoutRepository,
-            ExerciseRepository exerciseRepository, UserRepository userRepository) {
+            UserRepository userRepository) {
         this.sessionRepository = sessionRepository;
         this.workoutRepository = workoutRepository;
-        this.exerciseRepository = exerciseRepository;
         this.userRepository = userRepository;
     }
 
@@ -57,16 +59,33 @@ public class SessionService {
     public SessionResponse createSession(SessionRequest request, UUID userId) {
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        Workout validatedWorkout = getValidatedWorkout(request, userId);
+        Workout workout = getValidatedWorkout(request, userId);
+
+        Instant endedAt = Instant.now();
+        if (request.getStartedAt().isAfter(endedAt.plus(CLOCK_TOLERANCE))) {
+            throw badRequest("startedAt darf nicht in der Zukunft liegen.");
+        }
+
+        Map<Integer, SessionExerciseRequest> requestsByPosition = indexByPosition(request);
+        validateAgainstWorkout(workout, requestsByPosition);
+
         Session session = new Session();
         session.setOwner(owner);
-        session.setSourceWorkoutId(validatedWorkout.getId());
-        session.setWorkoutName(validatedWorkout.getName());
+        session.setSourceWorkoutId(workout.getId());
+        session.setWorkoutName(workout.getName());
         session.setStartedAt(request.getStartedAt());
-        session.setEndedAt(Instant.now());
-        session.setStatus(request.getStatus());
-        for (SessionExerciseRequest exerciseRequest : request.getSessionExercises()) {
-            session.addSessionExercise(toEntity(exerciseRequest));
+        session.setEndedAt(endedAt);
+
+        int totalSets = 0;
+        for (WorkoutExercise workoutExercise : workout.getWorkoutExercises()) {
+            SessionExerciseRequest exerciseRequest = requestsByPosition.get(workoutExercise.getPosition());
+            List<SessionSetRequest> sets = exerciseRequest == null ? List.of() : exerciseRequest.getSets();
+            validateSets(workoutExercise, sets);
+            totalSets += sets.size();
+            session.addSessionExercise(toEntity(workoutExercise, sets));
+        }
+        if (totalSets == 0) {
+            throw badRequest("Mindestens ein Satz muss ausgefüllt sein.");
         }
 
         Session savedSession = sessionRepository.save(session);
@@ -134,7 +153,6 @@ public class SessionService {
         response.setWorkoutName(session.getWorkoutName());
         response.setStartedAt(session.getStartedAt());
         response.setEndedAt(session.getEndedAt());
-        response.setStatus(session.getStatus());
         response.setSessionExercises(
                 session.getSessionExercises().stream()
                         .sorted(Comparator.comparing(SessionExercise::getPosition))
@@ -171,19 +189,58 @@ public class SessionService {
         return response;
     }
 
-    private SessionExercise toEntity(SessionExerciseRequest request) {
-        final Exercise exercise = exerciseRepository.findById(request.getSourceExerciseId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Exercise not found with id: " + request.getSourceExerciseId()));
+    private Map<Integer, SessionExerciseRequest> indexByPosition(SessionRequest request) {
+        Map<Integer, SessionExerciseRequest> byPosition = new HashMap<>();
+        for (SessionExerciseRequest exerciseRequest : request.getSessionExercises()) {
+            if (byPosition.put(exerciseRequest.getPosition(), exerciseRequest) != null) {
+                throw badRequest("Position " + exerciseRequest.getPosition() + " ist doppelt vorhanden.");
+            }
+        }
+        return byPosition;
+    }
+
+    private void validateAgainstWorkout(Workout workout, Map<Integer, SessionExerciseRequest> requestsByPosition) {
+        Map<Integer, WorkoutExercise> workoutByPosition = new HashMap<>();
+        for (WorkoutExercise workoutExercise : workout.getWorkoutExercises()) {
+            workoutByPosition.put(workoutExercise.getPosition(), workoutExercise);
+        }
+        requestsByPosition.forEach((position, exerciseRequest) -> {
+            WorkoutExercise workoutExercise = workoutByPosition.get(position);
+            if (workoutExercise == null
+                    || !workoutExercise.getExercise().getId().equals(exerciseRequest.getSourceExerciseId())) {
+                throw badRequest("Übung an Position " + position + " gehört nicht zum Workout.");
+            }
+        });
+    }
+
+    private void validateSets(WorkoutExercise workoutExercise, List<SessionSetRequest> sets) {
+        if (sets.size() > workoutExercise.getPlannedSets()) {
+            throw badRequest("Zu viele Sätze für Übung an Position " + workoutExercise.getPosition() + ".");
+        }
+        List<Integer> setNumbers = sets.stream().map(SessionSetRequest::getSetNumber).sorted().toList();
+        for (int i = 0; i < setNumbers.size(); i++) {
+            if (setNumbers.get(i) != i + 1) {
+                throw badRequest("Satznummern müssen eindeutig sein und bei 1 beginnen (Position "
+                        + workoutExercise.getPosition() + ").");
+            }
+        }
+    }
+
+    private ResponseStatusException badRequest(String message) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+    }
+
+    private SessionExercise toEntity(WorkoutExercise workoutExercise, List<SessionSetRequest> sets) {
+        final Exercise exercise = workoutExercise.getExercise();
         final SessionExercise sessionExercise = new SessionExercise();
         sessionExercise.setSourceExerciseId(exercise.getId());
         sessionExercise.setExerciseName(exercise.getName());
         sessionExercise.setMuscleGroup(exercise.getMuscleGroup());
-        sessionExercise.setPosition(request.getPosition());
-        sessionExercise.setPlannedSets(request.getPlannedSets());
-        sessionExercise.setMinReps(request.getMinReps());
-        sessionExercise.setMaxReps(request.getMaxReps());
-        for (SessionSetRequest setRequest : request.getSets()) {
+        sessionExercise.setPosition(workoutExercise.getPosition());
+        sessionExercise.setPlannedSets(workoutExercise.getPlannedSets());
+        sessionExercise.setMinReps(workoutExercise.getMinReps());
+        sessionExercise.setMaxReps(workoutExercise.getMaxReps());
+        for (SessionSetRequest setRequest : sets) {
             sessionExercise.addSet(toEntity(setRequest));
         }
         return sessionExercise;
@@ -203,7 +260,6 @@ public class SessionService {
         response.setWorkoutName(session.getWorkoutName());
         response.setStartedAt(session.getStartedAt());
         response.setEndedAt(session.getEndedAt());
-        response.setStatus(session.getStatus());
         response.setExerciseCount(session.getSessionExercises().size());
         return response;
     }

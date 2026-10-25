@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.patrickoeder.gymrats.session.SessionStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,9 +15,6 @@ public class SessionRequest {
 
     @NotNull
     private Instant startedAt;
-
-    @NotNull
-    private SessionStatus status;
 
     @NotEmpty
     @Valid
@@ -38,14 +34,6 @@ public class SessionRequest {
 
     public void setStartedAt(Instant startedAt) {
         this.startedAt = startedAt;
-    }
-
-    public SessionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionStatus status) {
-        this.status = status;
     }
 
     public List<SessionExerciseRequest> getSessionExercises() {

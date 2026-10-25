@@ -2,14 +2,12 @@ package de.patrickoeder.gymrats.session.dto;
 
 import java.time.Instant;
 import java.util.UUID;
-import de.patrickoeder.gymrats.session.SessionStatus;
 
 public class SessionSummaryResponse {
     private UUID id;
     private String workoutName;
     private Instant startedAt;
     private Instant endedAt;
-    private SessionStatus status;
     private Integer exerciseCount;
 
     public UUID getId() {
@@ -42,14 +40,6 @@ public class SessionSummaryResponse {
 
     public void setEndedAt(Instant endedAt) {
         this.endedAt = endedAt;
-    }
-
-    public SessionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionStatus status) {
-        this.status = status;
     }
 
     public Integer getExerciseCount() {

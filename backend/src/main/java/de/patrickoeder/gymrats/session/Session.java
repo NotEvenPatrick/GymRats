@@ -14,8 +14,6 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -44,10 +42,6 @@ public class Session {
 
     @NotNull
     private Instant endedAt;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private SessionStatus status;
 
     @NotNull
     @Valid
@@ -96,14 +90,6 @@ public class Session {
 
     public void setEndedAt(Instant endedAt) {
         this.endedAt = endedAt;
-    }
-
-    public SessionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionStatus status) {
-        this.status = status;
     }
 
     public List<SessionExercise> getSessionExercises() {

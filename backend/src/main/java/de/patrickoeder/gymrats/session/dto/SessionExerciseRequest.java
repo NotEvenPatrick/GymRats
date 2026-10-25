@@ -19,18 +19,6 @@ public class SessionExerciseRequest {
     private Integer position;
 
     @NotNull
-    @Min(1)
-    private Integer plannedSets;
-
-    @NotNull
-    @Min(1)
-    private Integer minReps;
-
-    @NotNull
-    @Min(1)
-    private Integer maxReps;
-
-    @NotNull
     @Valid
     private List<SessionSetRequest> sets = new ArrayList<>();
 
@@ -48,30 +36,6 @@ public class SessionExerciseRequest {
 
     public void setPosition(Integer position) {
         this.position = position;
-    }
-
-    public Integer getPlannedSets() {
-        return plannedSets;
-    }
-
-    public void setPlannedSets(Integer plannedSets) {
-        this.plannedSets = plannedSets;
-    }
-
-    public Integer getMinReps() {
-        return minReps;
-    }
-
-    public void setMinReps(Integer minReps) {
-        this.minReps = minReps;
-    }
-
-    public Integer getMaxReps() {
-        return maxReps;
-    }
-
-    public void setMaxReps(Integer maxReps) {
-        this.maxReps = maxReps;
     }
 
     public List<SessionSetRequest> getSets() {

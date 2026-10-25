@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import de.patrickoeder.gymrats.session.SessionStatus;
 
 public class SessionResponse {
     private UUID id;
@@ -13,7 +12,6 @@ public class SessionResponse {
     private String workoutName;
     private Instant startedAt;
     private Instant endedAt;
-    private SessionStatus status;
     private List<SessionExerciseResponse> sessionExercises = new ArrayList<>();
 
     public UUID getId() {
@@ -54,14 +52,6 @@ public class SessionResponse {
 
     public void setEndedAt(Instant endedAt) {
         this.endedAt = endedAt;
-    }
-
-    public SessionStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(SessionStatus status) {
-        this.status = status;
     }
 
     public List<SessionExerciseResponse> getSessionExercises() {
