@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../core/services/notification-service';
 import {
   AbstractControl,
@@ -69,11 +68,11 @@ export class WorkoutForm {
 
   protected workoutId: string | null = null;
 
-  private router: Router = inject(Router);
-  private route: ActivatedRoute = inject(ActivatedRoute);
-  private exerciseService: ExerciseService = inject(ExerciseService);
-  private workoutService: WorkoutService = inject(WorkoutService);
-  private notificationService: NotificationService = inject(NotificationService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private exerciseService = inject(ExerciseService);
+  private workoutService = inject(WorkoutService);
+  private notificationService = inject(NotificationService);
 
   get exerciseRows(): FormArray<ExerciseRowForm> {
     return this.form.controls.exercises;

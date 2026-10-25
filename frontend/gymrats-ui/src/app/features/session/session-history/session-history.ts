@@ -20,13 +20,11 @@ export class SessionHistory {
 
   private sessionService = inject(SessionService);
 
-
-
   constructor() {
     this.loadSessionHistory();
   }
 
-  private loadSessionHistory() {
+  private loadSessionHistory(): void {
     this.sessionService.getHistory().subscribe({
       next: (sessions) => {
         this.sessions.set(sessions);
@@ -39,6 +37,4 @@ export class SessionHistory {
       }
     });
   }
-
-
 }

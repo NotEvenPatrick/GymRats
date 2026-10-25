@@ -13,7 +13,6 @@ export type ConfirmDialogResult = boolean | 'discard';
 export class ConfirmDialog {
   protected data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef);
-  discardButtonText?: string;
 
   cancel(): void {
     this.dialogRef.close(false);

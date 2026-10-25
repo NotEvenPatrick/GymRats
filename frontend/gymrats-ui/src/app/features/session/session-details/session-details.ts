@@ -28,7 +28,7 @@ export class SessionDetails {
     this.loadSession();
   }
 
-  private loadSession() {
+  private loadSession(): void {
     if (!this.sessionId) {
       this.error.set('Ungültige Session-ID.');
       this.loading.set(false);

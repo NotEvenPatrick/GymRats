@@ -16,8 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './header.html',
 })
 export class Header {
-  private authService: AuthService = inject(AuthService);
-  private router: Router = inject(Router);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   protected readonly navItems: { label: string; route: string }[] = [
     { label: 'Home', route: '/home' },

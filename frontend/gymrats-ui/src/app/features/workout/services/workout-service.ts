@@ -6,7 +6,7 @@ import { WorkoutRequest } from '../models/workout-request';
 
 @Service()
 export class WorkoutService {
-    private http: HttpClient = inject(HttpClient);
+    private http = inject(HttpClient);
 
     getById(id: string): Observable<Workout> {
         return this.http.get<Workout>(`/api/workouts/${id}`);

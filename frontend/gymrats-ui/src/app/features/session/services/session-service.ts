@@ -8,7 +8,7 @@ import { SessionSummary } from '../models/session-summary';
 
 @Service()
 export class SessionService {
-    private http: HttpClient = inject(HttpClient);
+    private http = inject(HttpClient);
 
     prepareSession(workoutId: string): Observable<SessionPreview> {
         return this.http.get<SessionPreview>(`/api/sessions/preview/${workoutId}`);

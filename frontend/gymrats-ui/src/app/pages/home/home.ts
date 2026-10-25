@@ -9,7 +9,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.scss',
   templateUrl: './home.html',
 })
-export class Home {
-  
-}
+export class Home {}
 

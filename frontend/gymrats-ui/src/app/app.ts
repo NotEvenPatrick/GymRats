@@ -1,4 +1,4 @@
-import { Component, inject, Signal, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { AuthService } from './features/auth/services/auth-service';
@@ -11,6 +11,5 @@ import { Footer } from './layout/footer/footer';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title: Signal<string> = signal('gymrats-ui');
   protected readonly currentUser = inject(AuthService).currentUser;
 }

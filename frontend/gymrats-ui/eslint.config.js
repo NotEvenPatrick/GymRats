@@ -15,6 +15,8 @@ module.exports = defineConfig([
     ],
     processor: angular.processInlineTemplates,
     rules: {
+      // console.error bleibt für technische Fehlerdetails neben der Nutzermeldung erlaubt
+      'no-console': ['warn', { allow: ['error', 'warn'] }],
       '@angular-eslint/directive-selector': [
         'error',
         {
