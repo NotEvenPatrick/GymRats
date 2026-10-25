@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkDrag, CdkDragHandle, CdkDropList, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { WorkoutService } from '../services/workout-service';
-import { WorkoutRequest } from '../models/workout-request';
+import { buildWorkoutRequest } from '../mappers/workout-request-mapper';
 
 type ExerciseRowForm = FormGroup<{
   exerciseId: FormControl<string | null>;
@@ -150,23 +150,12 @@ export class WorkoutForm {
       return;
     }
 
-    const formValue = this.form.getRawValue();
+    const request = buildWorkoutRequest(
+      this.form.getRawValue(),
+      this.exerciseRows.controls.map((row) => row.getRawValue()),
+    );
 
-    const request: WorkoutRequest = {
-      name: formValue.name.trim(),
-      description: formValue.description.trim(),
-      exercises: this.exerciseRows.controls.flatMap((row, index) => {
-        const { exerciseId, plannedSets, minReps, maxReps } = row.getRawValue();
-
-        if (exerciseId === null || plannedSets === null || minReps === null || maxReps === null) {
-          return [];
-        }
-
-        return [{ exerciseId, position: index + 1, plannedSets, minReps, maxReps }];
-      })
-    };
-
-    if (request.exercises.length !== this.exerciseRows.length) {
+    if (!request) {
       this.form.markAllAsTouched();
       return;
     }

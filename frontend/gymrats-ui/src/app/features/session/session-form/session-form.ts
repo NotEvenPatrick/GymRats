@@ -8,7 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SessionExerciseRequest, SessionRequest, SessionSetRequest } from '../models/session-request';
+import { SessionRequest } from '../models/session-request';
+import { buildSessionRequest } from '../mappers/session-request-mapper';
 import { SessionStatus } from '../models/status';
 import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
@@ -167,43 +168,9 @@ export class SessionForm {
       throw new Error('No active session loaded.');
     }
 
-    const exerciseFormArrays =
-      this.sessionForm.controls.sessionExercises.controls;
+    const setValues = this.sessionForm.controls.sessionExercises.controls.map((sets) => sets.getRawValue());
 
-    const sessionExercises: SessionExerciseRequest[] =
-      preview.sessionExercises.map((previewExercise, exerciseIndex) => {
-        const setFormArray = exerciseFormArrays[exerciseIndex];
-        const formSets = setFormArray.getRawValue();
-        const sets: SessionSetRequest[] = [];
-
-        formSets.forEach((set) => {
-          if (set.weight === null || set.reps === null) {
-            return;
-          }
-
-          sets.push({
-            setNumber: sets.length + 1,
-            weight: set.weight,
-            reps: set.reps,
-          });
-        });
-
-        return {
-          sourceExerciseId: previewExercise.sourceExerciseId,
-          position: previewExercise.position,
-          plannedSets: previewExercise.plannedSets,
-          minReps: previewExercise.minReps,
-          maxReps: previewExercise.maxReps,
-          sets,
-        };
-      });
-
-    return {
-      sourceWorkoutId: preview.sourceWorkoutId,
-      startedAt: preview.startedAt,
-      status,
-      sessionExercises,
-    };
+    return buildSessionRequest(preview, setValues, status);
   }
 
   private saveSession(status: SessionStatus): void {
