@@ -1,62 +1,53 @@
 import { Routes } from '@angular/router';
-import { Register } from './features/auth/register/register';
-import { Login } from './features/auth/login/login';
-import { Home } from './pages/home/home';
 import { authGuard } from './core/guards/auth-guard';
-import { ExerciseList } from './features/exercise/exercise-list/exercise-list';
-import { WorkoutList } from './features/workout/workout-list/workout-list';
-import { WorkoutForm } from './features/workout/workout-form/workout-form';
-import { SessionForm } from './features/session/session-form/session-form';
-import { SessionHistory } from './features/session/session-history/session-history';
-import { SessionDetails } from './features/session/session-details/session-details';
 
 export const routes: Routes = [
     {
         path: 'register',
-        component: Register,
+        loadComponent: () => import('./features/auth/register/register').then(m => m.Register)
     },
     {
         path: 'login',
-        component: Login,
+        loadComponent: () => import('./features/auth/login/login').then(m => m.Login),
     },
     {
         path: 'home',
-        component: Home,
+        loadComponent: () => import('./pages/home/home').then(m => m.Home),
         canActivate: [authGuard],
     },
     {
         path: 'workouts',
-        component: WorkoutList,
+        loadComponent: () => import('./features/workout/workout-list/workout-list').then(m => m.WorkoutList),
         canActivate: [authGuard],
     },
     {
         path: 'workouts/new',
-        component: WorkoutForm,
+        loadComponent: () => import('./features/workout/workout-form/workout-form').then(m => m.WorkoutForm),
         canActivate: [authGuard],
     },
     {
         path: 'workouts/:id/edit',
-        component: WorkoutForm,
+        loadComponent: () => import('./features/workout/workout-form/workout-form').then(m => m.WorkoutForm),
         canActivate: [authGuard],
     },
     {
         path: 'sessions',
-        component: SessionHistory,
+        loadComponent: () => import('./features/session/session-history/session-history').then(m => m.SessionHistory),
         canActivate: [authGuard],
     },
     {
         path: 'sessions/:id',
-        component: SessionDetails,
+        loadComponent: () => import('./features/session/session-details/session-details').then(m => m.SessionDetails),
         canActivate: [authGuard],
     },
     {
         path: 'sessions/start/:workoutId',
-        component: SessionForm,
+        loadComponent: () => import('./features/session/session-form/session-form').then(m => m.SessionForm),
         canActivate: [authGuard],
     },
     {
         path: 'exercises',
-        component: ExerciseList,
+        loadComponent: () => import('./features/exercise/exercise-list/exercise-list').then(m => m.ExerciseList),
         canActivate: [authGuard],
     },
     {
