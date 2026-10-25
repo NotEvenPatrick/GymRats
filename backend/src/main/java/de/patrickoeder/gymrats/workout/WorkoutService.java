@@ -32,7 +32,7 @@ public class WorkoutService {
 
     @Transactional 
     public WorkoutResponse createWorkout(WorkoutRequest request, UUID ownerId) {
-        User owner = userRepository.findById(ownerId).orElseThrow(() -> new RuntimeException("User not found"));
+        User owner = userRepository.findById(ownerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         Workout workout = new Workout();
         workout.setName(request.getName());

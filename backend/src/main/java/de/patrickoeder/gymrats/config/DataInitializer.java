@@ -3,6 +3,7 @@ package de.patrickoeder.gymrats.config;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import de.patrickoeder.gymrats.user.Role;
@@ -10,6 +11,7 @@ import de.patrickoeder.gymrats.user.User;
 import de.patrickoeder.gymrats.user.UserRepository;
 
 @Configuration
+@Profile("dev")
 public class DataInitializer {
 
     @Bean
