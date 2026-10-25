@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
-import { RegisterRequest, RegisterResponse } from '../models/register';
+import { RegisterRequest } from '../models/register';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -23,30 +23,37 @@ export class Register {
     password: new FormControl<string>('', [Validators.required, Validators.minLength(8)]),
   });
 
+  saving = signal(false);
+  errorMessage = signal<string | null>(null);
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.saving()) {
+      return;
+    }
+
+    this.saving.set(true);
+    this.errorMessage.set(null);
+
     const registerRequest: RegisterRequest = this.form.value as RegisterRequest;
     this.authService.register(registerRequest).subscribe({
-      next: (response: RegisterResponse) => {
-        console.log('Registration successful:', response);
+      next: () => {
         this.router.navigate(['/login']);
       },
       error: (error: HttpErrorResponse) => {
+        this.saving.set(false);
         switch (error.status) {
           case 400:
-            console.error('Bad Request:', error.error);
-            break;
-          case 401:
-            console.error('Unauthorisiert:', error.error);
+            this.errorMessage.set('Bitte überprüfe deine Eingaben.');
             break;
           case 409:
-            console.error('Conflict: Diese E-Mail-Adresse ist bereits registriert.');
+            this.errorMessage.set('Diese E-Mail-Adresse ist bereits registriert.');
             break;
           default:
-            console.error('Ein unerwarteter Fehler ist aufgetreten:', error);
+            this.errorMessage.set('Die Registrierung ist fehlgeschlagen. Bitte versuche es später erneut.');
         }
       }
     });

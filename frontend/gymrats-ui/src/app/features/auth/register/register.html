@@ -37,6 +37,9 @@
         </div>
       }
     </div>
-    <button type="submit">Register</button>
+    @if (errorMessage(); as message) {
+      <div class="error" role="alert">{{ message }}</div>
+    }
+    <button type="submit" [disabled]="saving()">Register</button>
   </form>
 </div>

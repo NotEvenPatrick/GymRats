@@ -19,7 +19,10 @@
                 </div>
             }
         </div>
-        <button type="submit">Login</button>
+        @if (errorMessage(); as message) {
+            <div class="error" role="alert">{{ message }}</div>
+        }
+        <button type="submit" [disabled]="saving()">Login</button>
     </form>
     <p>Sie haben noch kein Konto? <a routerLink="/register">Registrieren</a></p>
 </div>

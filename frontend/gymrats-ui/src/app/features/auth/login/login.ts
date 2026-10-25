@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
 import { LoginRequest } from '../models/login';
@@ -21,20 +21,35 @@ export class Login {
     password: new FormControl<string>('', Validators.required),
   });
 
+  saving = signal(false);
+  errorMessage = signal<string | null>(null);
+
   onSubmit(): void {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
     }
-    const loginRequest: LoginRequest = this.form.value as LoginRequest;
-      this.authService.login(loginRequest).subscribe({
-        next: () => {
-          this.router.navigate(['/home']);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Login failed:', error);
-        }
-      });
+    if (this.saving()) {
+      return;
     }
+
+    this.saving.set(true);
+    this.errorMessage.set(null);
+
+    const loginRequest: LoginRequest = this.form.value as LoginRequest;
+    this.authService.login(loginRequest).subscribe({
+      next: () => {
+        this.router.navigate(['/home']);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.saving.set(false);
+        this.errorMessage.set(
+          error.status === 401 || error.status === 403
+            ? 'E-Mail oder Passwort ist falsch.'
+            : 'Die Anmeldung ist fehlgeschlagen. Bitte versuche es später erneut.'
+        );
+      }
+    });
   }
+}
 

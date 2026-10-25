@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SessionExerciseRequest, SessionRequest, SessionSetRequest } from '../models/session-request';
 import { SessionStatus } from '../models/status';
 import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../shared/components/confirm-dialog/confirm-dialog';
@@ -134,8 +134,8 @@ export class SessionForm {
 
   private createSetForm(set: SessionSetPreview): SessionSetForm {
     return new FormGroup({
-      weight: new FormControl<number>(set.weight, { nonNullable: true }),
-      reps: new FormControl<number | null>(set.reps)
+      weight: new FormControl<number>(set.weight, { nonNullable: true, validators: Validators.min(0) }),
+      reps: new FormControl<number | null>(set.reps, [Validators.min(0), Validators.pattern(/^\d+$/)])
     });
   }
 
