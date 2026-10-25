@@ -1,1 +1,5 @@
 /*.http
+#H2 Data Base Files
+**/data/*.mv.db
+**/data/*.trace.db
+**/data/*.lock.db
