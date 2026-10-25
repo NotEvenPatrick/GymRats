@@ -1,7 +1,10 @@
 package de.patrickoeder.gymrats.workout;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -18,7 +21,7 @@ import de.patrickoeder.gymrats.workout.dto.WorkoutExerciseResponse;
 import de.patrickoeder.gymrats.workout.dto.WorkoutRequest;
 import de.patrickoeder.gymrats.workout.dto.WorkoutResponse;
 
-@Service 
+@Service
 public class WorkoutService {
     private final WorkoutRepository workoutRepository;
     private final UserRepository userRepository;
@@ -30,51 +33,39 @@ public class WorkoutService {
         this.exerciseRepository = exerciseRepository;
     }
 
-    @Transactional 
+    @Transactional
     public WorkoutResponse createWorkout(WorkoutRequest request, UUID ownerId) {
-        User owner = userRepository.findById(ownerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         Workout workout = new Workout();
-        workout.setName(request.getName());
-        workout.setDescription(request.getDescription());
         workout.setOwner(owner);
+        applyRequest(workout, request);
 
-        for (WorkoutExerciseRequest exerciseRequest : request.getExercises()) {
-            //Find exercise by its id
-            Exercise exercise = exerciseRepository.findById(exerciseRequest.getExerciseId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found"));
-            
-            //Map workoutExerciseRequest from the request to WorkoutExercise entity
-            WorkoutExercise workoutExercise = new WorkoutExercise();
-            workoutExercise.setExercise(exercise);
-            workoutExercise.setPosition(exerciseRequest.getPosition());
-            workoutExercise.setPlannedSets(exerciseRequest.getPlannedSets());
-            workoutExercise.setMinReps(exerciseRequest.getMinReps());
-            workoutExercise.setMaxReps(exerciseRequest.getMaxReps());
-
-            //Add the mapped workoutExercise to the workout
-            workout.addWorkoutExercise(workoutExercise);
-        }
-            Workout savedWorkout = workoutRepository.save(workout);
-            return toResponse(savedWorkout);
+        return toResponse(workoutRepository.save(workout));
     }
 
     @Transactional
     public WorkoutResponse updateWorkout(UUID id, UUID ownerId, WorkoutRequest request) {
         Workout workout = workoutRepository.findByIdAndOwner_Id(id, ownerId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workout not found"));
-        
-
-        workout.setName(request.getName().trim());
-        workout.setDescription(request.getDescription());
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workout not found"));
 
         for (WorkoutExercise existing : new ArrayList<>(workout.getWorkoutExercises())) {
             workout.removeWorkoutExercise(existing);
-            
         }
+        applyRequest(workout, request);
+
+        return toResponse(workout);
+    }
+
+    private void applyRequest(Workout workout, WorkoutRequest request) {
+        validatePositions(request);
+        workout.setName(request.getName().trim());
+        workout.setDescription(request.getDescription());
+
         for (WorkoutExerciseRequest exerciseRequest : request.getExercises()) {
             Exercise exercise = exerciseRepository.findById(exerciseRequest.getExerciseId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise not found"));
 
             WorkoutExercise workoutExercise = new WorkoutExercise();
             workoutExercise.setExercise(exercise);
@@ -83,9 +74,17 @@ public class WorkoutService {
             workoutExercise.setMinReps(exerciseRequest.getMinReps());
             workoutExercise.setMaxReps(exerciseRequest.getMaxReps());
             workout.addWorkoutExercise(workoutExercise);
-        
         }
-        return toResponse(workout);
+    }
+
+    private void validatePositions(WorkoutRequest request) {
+        Set<Integer> positions = new HashSet<>();
+        for (WorkoutExerciseRequest exerciseRequest : request.getExercises()) {
+            if (!positions.add(exerciseRequest.getPosition())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Position " + exerciseRequest.getPosition() + " ist doppelt vergeben.");
+            }
+        }
     }
 
     @Transactional
@@ -106,12 +105,9 @@ public class WorkoutService {
 
     @Transactional(readOnly = true)
     public List<WorkoutResponse> getAllByOwner(UUID ownerId) {
-        List<Workout> workouts = workoutRepository.findAllByOwnerId(ownerId);
-        List<WorkoutResponse> responses = new ArrayList<>();
-        for (Workout workout : workouts) {
-            responses.add(toResponse(workout));
-        }
-        return responses;
+        return workoutRepository.findAllByOwnerId(ownerId).stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private WorkoutResponse toResponse(Workout workout) {
@@ -122,7 +118,10 @@ public class WorkoutService {
         response.setOwnerId(workout.getOwner().getId());
 
         List<WorkoutExerciseResponse> exercises = new ArrayList<>();
-        for (WorkoutExercise workoutExercise : workout.getWorkoutExercises()) {
+        List<WorkoutExercise> sortedExercises = workout.getWorkoutExercises().stream()
+                .sorted(Comparator.comparing(WorkoutExercise::getPosition))
+                .toList();
+        for (WorkoutExercise workoutExercise : sortedExercises) {
             WorkoutExerciseResponse exerciseResponse = new WorkoutExerciseResponse();
             exerciseResponse.setId(workoutExercise.getId());
             exerciseResponse.setExerciseId(workoutExercise.getExercise().getId());
@@ -139,5 +138,3 @@ public class WorkoutService {
         return response;
     }
 }
-    
-

@@ -106,6 +106,36 @@ class ApiErrorHandlingTest {
     }
 
     @Test
+    void workoutTrimsNameRejectsDuplicatePositionsAndReturnsExercisesSorted() throws Exception {
+        String exercises = mockMvc.perform(get("/api/exercises").header("Authorization", "Bearer " + token))
+                .andReturn().getResponse().getContentAsString();
+        String first = JsonPath.read(exercises, "$[0].id");
+        String second = JsonPath.read(exercises, "$[1].id");
+
+        String duplicate = """
+                {"name":"W","exercises":[
+                  {"exerciseId":"%s","position":1,"plannedSets":3,"minReps":6,"maxReps":10},
+                  {"exerciseId":"%s","position":1,"plannedSets":3,"minReps":6,"maxReps":10}]}
+                """.formatted(first, second);
+        mockMvc.perform(post("/api/workouts").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(duplicate))
+                .andExpect(status().isBadRequest());
+
+        String unsorted = """
+                {"name":"  Push  ","exercises":[
+                  {"exerciseId":"%s","position":2,"plannedSets":3,"minReps":6,"maxReps":10},
+                  {"exerciseId":"%s","position":1,"plannedSets":3,"minReps":6,"maxReps":10}]}
+                """.formatted(second, first);
+        mockMvc.perform(post("/api/workouts").header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON).content(unsorted))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Push"))
+                .andExpect(jsonPath("$.exercises[0].position").value(1))
+                .andExpect(jsonPath("$.exercises[0].exerciseId").value(first))
+                .andExpect(jsonPath("$.exercises[1].position").value(2));
+    }
+
+    @Test
     void unknownResourceReturns404AsProblemDetail() throws Exception {
         mockMvc.perform(get("/api/workouts/00000000-0000-0000-0000-000000000000")
                 .header("Authorization", "Bearer " + token))
