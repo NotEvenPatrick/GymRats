@@ -7,20 +7,25 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { SessionRequest } from '../models/session-request';
 import { buildSessionRequest } from '../mappers/session-request-mapper';
-import { SessionStatus } from '../models/status';
 import { ConfirmDialog, ConfirmDialogData, ConfirmDialogResult } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 type SessionSetForm = FormGroup<{
-  weight: FormControl<number>;
+  weight: FormControl<number | null>;
   reps: FormControl<number | null>;
 }>;
 
 type SessionFormGroup = FormGroup<{
   sessionExercises: FormArray<FormArray<SessionSetForm>>
 }>
+
+function weightRequiredWithReps(set: AbstractControl): ValidationErrors | null {
+  const { weight, reps } = (set as SessionSetForm).controls;
+
+  return reps.value !== null && weight.value === null ? { weightMissing: true } : null;
+}
 
 @Component({
   imports: [MatProgressSpinnerModule, MatCardModule, MatButtonModule, MatIconModule, ReactiveFormsModule],
@@ -53,47 +58,51 @@ export class SessionForm {
   }
 
   get isFinishDisabled(): boolean {
-    return this.saving() || this.savedSessionId() !== null || !this.areAllSetsFilled();
+    return this.saving() || this.savedSessionId() !== null || this.filledSetCount === 0;
   }
 
-  get isCancelDisabled(): boolean {
+  get isDiscardDisabled(): boolean {
     return this.saving() || this.savedSessionId() !== null;
+  }
+
+  get filledSetCount(): number {
+    return this.allSets().filter((set) => this.isSetFilled(set)).length;
+  }
+
+  get totalSetCount(): number {
+    return this.allSets().length;
   }
 
   finishSession(): void {
     const dialogRef = this.dialog.open<ConfirmDialog, ConfirmDialogData, ConfirmDialogResult>(ConfirmDialog, {
       data: {
         title: 'Training beenden?',
-        message: 'Möchtest du deine Trainingseinheit abschließen?',
-        cancelButtonText: 'Abbrechen',
-        confirmButtonText: 'Beenden',
+        message: `${this.filledSetCount} von ${this.totalSetCount} Sätzen sind ausgefüllt. Nicht ausgefüllte Sätze werden nicht gespeichert.`,
+        cancelButtonText: 'Weiter trainieren',
+        confirmButtonText: 'Beenden und speichern',
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-        this.saveSession(SessionStatus.COMPLETED);
+        this.saveSession();
       }
     });
   }
 
-  cancelSession(): void {
+  discardSession(): void {
     const dialogRef = this.dialog.open<ConfirmDialog, ConfirmDialogData, ConfirmDialogResult>(ConfirmDialog, {
       data: {
-        title: 'Training abbrechen?',
-        message:
-          'Möchtest du deine bisherige Trainingseinheit speichern oder verwerfen? Nicht abgeschlossene Sätze werden nicht gespeichert.',
+        title: 'Training verwerfen?',
+        message: 'Deine Eingaben werden nicht gespeichert.',
         cancelButtonText: 'Weiter trainieren',
-        confirmButtonText: 'Abbrechen und speichern',
-        discardButtonText: 'Abbrechen und verwerfen',
+        confirmButtonText: 'Verwerfen',
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-        this.saveSession(SessionStatus.CANCELLED);
-      } else if (result === 'discard') {
-        this.router.navigate(['/workouts']);
+        this.navigateToWorkouts();
       }
     });
   }
@@ -102,21 +111,14 @@ export class SessionForm {
     this.router.navigate(['/workouts']);
   }
 
-  areAllSetsFilled(): boolean {
-    const exerciseFormArrays =
-      this.sessionForm.controls.sessionExercises.controls;
+  private allSets(): SessionSetForm[] {
+    return this.sessionForm.controls.sessionExercises.controls.flatMap((exerciseSets) => exerciseSets.controls);
+  }
 
-    if (exerciseFormArrays.length === 0) {
-      return false;
-    }
+  private isSetFilled(set: SessionSetForm): boolean {
+    const { weight, reps } = set.controls;
 
-    return exerciseFormArrays.every((exerciseSets) =>
-      exerciseSets.controls.length > 0 && exerciseSets.controls.every((set) => {
-        const reps = set.controls.reps.value;
-
-        return reps !== null && set.controls.reps.valid;
-      })
-    );
+    return weight.value !== null && reps.value !== null && weight.valid && reps.valid;
   }
 
   private initializeForm(session: SessionPreview): void {
@@ -134,10 +136,13 @@ export class SessionForm {
   }
 
   private createSetForm(set: SessionSetPreview): SessionSetForm {
-    return new FormGroup({
-      weight: new FormControl<number>(set.weight, { nonNullable: true, validators: Validators.min(0) }),
-      reps: new FormControl<number | null>(set.reps, [Validators.min(0), Validators.pattern(/^\d+$/)])
-    });
+    return new FormGroup(
+      {
+        weight: new FormControl<number | null>(set.weight, Validators.min(0)),
+        reps: new FormControl<number | null>(set.reps, [Validators.min(1), Validators.pattern(/^\d+$/)]),
+      },
+      weightRequiredWithReps,
+    );
   }
 
   private loadActiveSession(): void {
@@ -161,7 +166,7 @@ export class SessionForm {
     });
   }
 
-  private createSessionRequest(status: SessionStatus): SessionRequest {
+  private createSessionRequest(): SessionRequest {
     const preview = this.activeSession();
 
     if (!preview) {
@@ -170,10 +175,10 @@ export class SessionForm {
 
     const setValues = this.sessionForm.controls.sessionExercises.controls.map((sets) => sets.getRawValue());
 
-    return buildSessionRequest(preview, setValues, status);
+    return buildSessionRequest(preview, setValues);
   }
 
-  private saveSession(status: SessionStatus): void {
+  private saveSession(): void {
     if (this.saving() || this.savedSessionId()) {
       return;
     }
@@ -184,15 +189,15 @@ export class SessionForm {
       return;
     }
 
-    if (status === SessionStatus.COMPLETED && !this.areAllSetsFilled()) {
-      this.saveError.set('Bitte fülle alle Sätze aus, bevor du das Training beendest.');
+    if (this.filledSetCount === 0) {
+      this.saveError.set('Bitte fülle mindestens einen Satz aus.');
       return;
     }
 
     this.saving.set(true);
     this.saveError.set(null);
 
-    const request = this.createSessionRequest(status);
+    const request = this.createSessionRequest();
 
     this.sessionService.create(request).subscribe({
 

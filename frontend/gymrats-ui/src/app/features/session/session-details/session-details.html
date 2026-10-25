@@ -6,10 +6,7 @@
 @if (error(); as errorMessage) {
 <p role="alert">{{ errorMessage }}</p>
 } @else if (session(); as details) {
-<h1>
-    {{ details.workoutName }}
-    ({{ details.status | sessionStatusLabel }})
-</h1>
+<h1>{{ details.workoutName }}</h1>
 
 <mat-card>
     <p>

@@ -1,6 +1,5 @@
 import { SessionPreview } from '../models/session-preview';
 import { SessionExerciseRequest, SessionRequest, SessionSetRequest } from '../models/session-request';
-import { SessionStatus } from '../models/status';
 
 export interface SessionSetValue {
   weight: number | null;
@@ -10,7 +9,6 @@ export interface SessionSetValue {
 export function buildSessionRequest(
   preview: SessionPreview,
   setValues: SessionSetValue[][],
-  status: SessionStatus,
 ): SessionRequest {
   const sessionExercises: SessionExerciseRequest[] = preview.sessionExercises.map((exercise, exerciseIndex) => {
     const sets: SessionSetRequest[] = [];
@@ -26,9 +24,6 @@ export function buildSessionRequest(
     return {
       sourceExerciseId: exercise.sourceExerciseId,
       position: exercise.position,
-      plannedSets: exercise.plannedSets,
-      minReps: exercise.minReps,
-      maxReps: exercise.maxReps,
       sets,
     };
   });
@@ -36,7 +31,6 @@ export function buildSessionRequest(
   return {
     sourceWorkoutId: preview.sourceWorkoutId,
     startedAt: preview.startedAt,
-    status,
     sessionExercises,
   };
 }

@@ -6,11 +6,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SessionService } from '../services/session-service';
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { SessionStatusLabelPipe } from '../pipes/session-status-label-pipe';
 import { MuscleGroupLabelPipe } from '../../exercise/pipes/muscle-group-label-pipe';
 
 @Component({
-  imports: [MatCardModule, MatProgressSpinnerModule, DatePipe, RouterLink, MatButtonModule, MuscleGroupLabelPipe, SessionStatusLabelPipe],
+  imports: [MatCardModule, MatProgressSpinnerModule, DatePipe, RouterLink, MatButtonModule, MuscleGroupLabelPipe],
   selector: 'app-session-details',
   styleUrl: './session-details.scss',
   templateUrl: './session-details.html',

@@ -1,12 +1,9 @@
-import { SessionStatus } from "./status";
-
 export interface Session {
     id: string;
     sourceWorkoutId: string;
     workoutName: string;
     startedAt: string;
     endedAt: string;
-    status: SessionStatus;
     sessionExercises: SessionExercise[];
 }
 

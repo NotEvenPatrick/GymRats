@@ -31,9 +31,12 @@
                         }
                         <label [for]="'reps-' + exerciseIndex + '-' + setIndex">Wiederholungen</label>
                         <input type="number" [id]="'reps-' + exerciseIndex + '-' + setIndex" formControlName="reps"
-                            min="0" step="1" />
+                            min="1" step="1" />
                         @if (setForm.controls.reps.invalid) {
-                        <p class="field-error" role="alert">Bitte gib eine ganze Zahl ab 0 ein.</p>
+                        <p class="field-error" role="alert">Bitte gib eine ganze Zahl ab 1 ein.</p>
+                        }
+                        @if (setForm.hasError('weightMissing')) {
+                        <p class="field-error" role="alert">Bitte gib ein Gewicht an.</p>
                         }
                     </div>
                     }
@@ -47,8 +50,8 @@
             Session beenden
         </button>
 
-        <button mat-raised-button color="warn" type="button" (click)="cancelSession()" [disabled]="isCancelDisabled">
-            Session abbrechen
+        <button mat-raised-button color="warn" type="button" (click)="discardSession()" [disabled]="isDiscardDisabled">
+            Session verwerfen
         </button>
     </div>
 
