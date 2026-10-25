@@ -73,6 +73,39 @@ class ApiErrorHandlingTest {
     }
 
     @Test
+    void registrationRejectsInvalidEmailAndShortPassword() throws Exception {
+        mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"firstName":"A","lastName":"B","email":"kein-email","password":"kurz"}
+                        """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.email").isNotEmpty())
+                .andExpect(jsonPath("$.errors.password").isNotEmpty());
+    }
+
+    @Test
+    void emailIsCaseInsensitiveForRegistrationAndLogin() throws Exception {
+        mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"firstName":"A","lastName":"B","email":"Case@Example.com","password":"Passw0rd!"}
+                        """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.email").value("case@example.com"));
+
+        mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"firstName":"A","lastName":"B","email":"CASE@example.com","password":"Passw0rd!"}
+                        """))
+                .andExpect(status().isConflict());
+
+        mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"email":"CASE@EXAMPLE.COM","password":"Passw0rd!"}
+                        """))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void unknownResourceReturns404AsProblemDetail() throws Exception {
         mockMvc.perform(get("/api/workouts/00000000-0000-0000-0000-000000000000")
                 .header("Authorization", "Bearer " + token))

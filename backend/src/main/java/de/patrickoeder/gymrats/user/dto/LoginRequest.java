@@ -1,9 +1,11 @@
 package de.patrickoeder.gymrats.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
-    @NotBlank 
+    @NotBlank
+    @Email
     private String email;
 
     @NotBlank 

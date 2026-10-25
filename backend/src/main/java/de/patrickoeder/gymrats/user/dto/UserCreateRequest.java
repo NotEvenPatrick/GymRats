@@ -1,6 +1,8 @@
 package de.patrickoeder.gymrats.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserCreateRequest{
     @NotBlank
@@ -10,9 +12,12 @@ public class UserCreateRequest{
     private String lastName;
 
     @NotBlank
+    @Email
     private String email;
     
+    // BCrypt verarbeitet maximal 72 Byte
     @NotBlank
+    @Size(min = 8, max = 72)
     private String password;
 
     public String getFirstName() {
