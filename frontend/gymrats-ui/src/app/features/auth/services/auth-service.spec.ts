@@ -86,7 +86,7 @@ describe('AuthService', () => {
 
     expect(tokenStorageMock.saveToken).toHaveBeenCalledWith(response.token);
 
-    const user = await firstValueFrom(service.currentUser$);
+    const user = service.currentUser();
 
     expect(user).toEqual({
       id: response.userId,
@@ -113,7 +113,7 @@ describe('AuthService', () => {
     const req = httpTestingController.expectOne('/api/auth/login');
 
     req.flush(response);
-    expect(await firstValueFrom(service.currentUser$)).toEqual({
+    expect(service.currentUser()).toEqual({
       id: response.userId,
       firstName: response.firstName,
       lastName: response.lastName,
@@ -124,7 +124,7 @@ describe('AuthService', () => {
 
     expect(tokenStorageMock.removeToken).toHaveBeenCalled();
 
-    const user = await firstValueFrom(service.currentUser$);
+    const user = service.currentUser();
     expect(user).toBeNull();
   });
 

@@ -1,7 +1,7 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RegisterRequest, RegisterResponse } from '../models/register';
-import { BehaviorSubject, Observable, of, tap, catchError } from 'rxjs';
+import { Observable, of, tap, catchError } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/login';
 import { TokenStorageService } from '../../../core/services/token-storage.service';
 import { CurrentUser } from '../models/current-user';
@@ -11,8 +11,8 @@ export class AuthService {
   private http = inject(HttpClient);
   private tokenStorageService = inject(TokenStorageService);
   
-  private currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private readonly user = signal<CurrentUser | null>(null);
+  readonly currentUser = this.user.asReadonly();
 
   register(registerRequest: RegisterRequest): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>('/api/users', registerRequest);
@@ -22,7 +22,7 @@ export class AuthService {
     return this.http.post<LoginResponse>('/api/auth/login', loginRequest).pipe(
       tap((response: LoginResponse) => {
         this.tokenStorageService.saveToken(response.token);
-        this.currentUserSubject.next({
+        this.user.set({
           id: response.userId,
           firstName: response.firstName,
           lastName: response.lastName,
@@ -34,7 +34,7 @@ export class AuthService {
 
   logout(): void {
     this.tokenStorageService.removeToken();
-    this.currentUserSubject.next(null);
+    this.user.set(null);
   }
 
   restoreSession(): Observable<CurrentUser | null> {
@@ -45,11 +45,11 @@ export class AuthService {
     }
 
     return this.http.get<CurrentUser>('/api/users/me').pipe(
-      tap(user => this.currentUserSubject.next(user)),
+      tap(user => this.user.set(user)),
       catchError((error: HttpErrorResponse) => {
         if(error.status === 401) {
           this.tokenStorageService.removeToken();
-          this.currentUserSubject.next(null);
+          this.user.set(null);
         }
         return of(null);
       })

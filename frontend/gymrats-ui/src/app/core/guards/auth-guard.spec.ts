@@ -1,15 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { authGuard } from './auth-guard';
-import { of, Observable, firstValueFrom } from 'rxjs';
 import { AuthService } from '../../features/auth/services/auth-service';
 
 describe('authGuard', () => {
   const executeGuard: CanActivateFn = (...guardParameters) =>
     TestBed.runInInjectionContext(() => authGuard(...guardParameters));
 
-  const authServiceMock: { currentUser$: Observable<{ id: string } | null> } = {
-    currentUser$: of({ id: 'user-1' })
+  const authServiceMock: { currentUser: () => { id: string } | null } = {
+    currentUser: () => ({ id: 'user-1' })
   };
 
   const routerMock = {
@@ -29,27 +28,19 @@ describe('authGuard', () => {
     expect(executeGuard).toBeTruthy();
   });
 
-  it('should allow an authenticated user', async () => {
-    const result = executeGuard(
-      {} as ActivatedRouteSnapshot,
-      {} as RouterStateSnapshot
-    ) as Observable<boolean>;
+  it('should allow an authenticated user', () => {
+    const result = executeGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
-    const value = await firstValueFrom(result);
-    expect(value).toBe(true);
+    expect(result).toBe(true);
   });
 
-  it('should redirect an unauthenticated user', async () => {
+  it('should redirect an unauthenticated user', () => {
     vi.clearAllMocks();
-    authServiceMock.currentUser$ = of(null);
+    authServiceMock.currentUser = () => null;
 
-    const result = executeGuard(
-      {} as ActivatedRouteSnapshot,
-      {} as RouterStateSnapshot
-    ) as Observable<boolean>;
+    const result = executeGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
-    const value =await firstValueFrom(result);
-    expect(value).toBe('loginUrlTree');
+    expect(result).toBe('loginUrlTree');
     expect(routerMock.parseUrl).toHaveBeenCalledWith('/login');
   });
 });
