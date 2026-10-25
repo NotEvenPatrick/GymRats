@@ -1,4 +1,8 @@
-
+@if (loading()) {
+<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+} @else if (loadError(); as errorMessage) {
+<p role="alert">{{ errorMessage }}</p>
+} @else {
 <table mat-table [dataSource]="exercises()">
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -25,5 +29,10 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <tr *matNoDataRow>
+        <td [attr.colspan]="displayedColumns.length">Noch keine Übungen vorhanden.</td>
+    </tr>
 </table>
+}
 <button mat-raised-button color="primary" (click)="openExerciseDialog()">Übung hinzufügen</button>

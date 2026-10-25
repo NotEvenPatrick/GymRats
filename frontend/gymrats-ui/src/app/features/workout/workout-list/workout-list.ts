@@ -6,18 +6,21 @@ import { MuscleGroupLabelPipe } from '../../exercise/pipes/muscle-group-label-pi
 import { NotificationService } from '../../../core/services/notification-service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
+import { confirmDelete } from '../../../shared/components/confirm-dialog/confirm-delete';
 
 @Component({
-  imports: [MatTableModule, MatButtonModule, MatIconModule, MuscleGroupLabelPipe],
+  imports: [MatTableModule, MatButtonModule, MatIconModule, MuscleGroupLabelPipe, MatProgressSpinnerModule],
   selector: 'app-workout-list',
   styleUrl: './workout-list.scss',
   templateUrl: './workout-list.html',
 })
 export class WorkoutList {
   workouts = signal<Workout[]>([]);
+  loading = signal(true);
+  loadError = signal<string | null>(null);
   expandedWorkoutId = signal<string | null>(null);
   displayedColumns = ['name', 'description', 'exerciseCount', 'actions'];
 
@@ -43,23 +46,18 @@ export class WorkoutList {
   }
   
   deleteWorkout(workoutId: string): void {
-    this.dialog.open(ConfirmDialog, {
-      data: {
-        title: 'Trainingsplan löschen?',
-        message: 'Möchtest du diesen Trainingsplan wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
-        confirmButtonText: 'Löschen',
-        cancelButtonText: 'Abbrechen'
-      }
-    }).afterClosed().subscribe(confirmed => {
-      if (confirmed) {
-        this.workoutService.delete(workoutId).subscribe({
-          next: () => {
-            this.notificationService.success('Trainingsplan erfolgreich gelöscht');
-            this.loadWorkouts();
-          },
-          error: () => this.notificationService.error('Fehler beim Löschen des Trainingsplans'),
-        });
-      }
+    confirmDelete(
+      this.dialog,
+      'Trainingsplan löschen?',
+      'Möchtest du diesen Trainingsplan wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
+    ).subscribe(() => {
+      this.workoutService.delete(workoutId).subscribe({
+        next: () => {
+          this.notificationService.success('Trainingsplan erfolgreich gelöscht');
+          this.loadWorkouts();
+        },
+        error: () => this.notificationService.error('Fehler beim Löschen des Trainingsplans'),
+      });
     });
   }
 
@@ -69,8 +67,16 @@ export class WorkoutList {
 
   private loadWorkouts(): void {
     this.workoutService.getAll().subscribe({
-      next: (workouts) => this.workouts.set(workouts),
-      error: () => this.notificationService.error('Fehler beim Laden der Trainingspläne'),
+      next: (workouts) => {
+        this.workouts.set(workouts);
+        this.loadError.set(null);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loadError.set('Die Trainingspläne konnten nicht geladen werden.');
+        this.loading.set(false);
+        this.notificationService.error('Fehler beim Laden der Trainingspläne');
+      },
     });
   }
 }
