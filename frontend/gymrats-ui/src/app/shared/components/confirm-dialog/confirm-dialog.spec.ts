@@ -10,7 +10,7 @@ describe('ConfirmDialog', () => {
     await TestBed.configureTestingModule({
       imports: [ConfirmDialog],
       providers: [
-        { provide: MatDialogRef, useValue: { close: () => { } } },
+        { provide: MatDialogRef, useValue: { close: vi.fn() } },
         { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     }).compileComponents();
