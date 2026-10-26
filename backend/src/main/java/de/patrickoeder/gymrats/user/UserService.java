@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import de.patrickoeder.gymrats.user.dto.LoginRequest;
@@ -31,6 +32,7 @@ public class UserService {
         this.jwtEncoder = jwtEncoder;
     }
 
+    @Transactional
     public UserResponse createUser(UserCreateRequest request) {
         String email = normalizeEmail(request.getEmail());
         if (userRepository.existsByEmail(email)) {
@@ -47,6 +49,7 @@ public class UserService {
         return toResponse(userRepository.save(user));
     }
 
+    @Transactional(readOnly = true)
     public LoginResponse loginUser(LoginRequest request) {
         User user = userRepository.findByEmail(normalizeEmail(request.getEmail()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Ungültige E-Mail-Adresse oder Passwort."));
@@ -76,6 +79,7 @@ public class UserService {
         return email.trim().toLowerCase(Locale.ROOT);
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getCurrentUser(Authentication authentication) {
         UUID userId = UUID.fromString(authentication.getName());
         User user = userRepository.findById(userId)

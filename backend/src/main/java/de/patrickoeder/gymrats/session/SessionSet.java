@@ -1,14 +1,11 @@
 package de.patrickoeder.gymrats.session;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.FetchType;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.UuidGenerator;
 
@@ -21,21 +18,17 @@ public class SessionSet {
     @UuidGenerator
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "session_exercise_id", nullable = false)
     private SessionExercise sessionExercise;
 
-    @NotNull
-    @Min(1)
+    @Column(nullable = false)
     private Integer setNumber;
 
-    @NotNull
-    @PositiveOrZero
+    @Column(nullable = false)
     private BigDecimal weight = BigDecimal.ZERO;
 
-    @NotNull
-    @Positive 
+    @Column(nullable = false)
     private Integer reps;
 
     public UUID getId() {

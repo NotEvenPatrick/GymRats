@@ -3,17 +3,14 @@ package de.patrickoeder.gymrats.session;
 import org.hibernate.annotations.UuidGenerator;
 
 import de.patrickoeder.gymrats.user.User;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.persistence.Entity;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,26 +23,24 @@ public class Session {
     @UuidGenerator
     private UUID id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @NotNull
+    @Column(nullable = false)
     private UUID sourceWorkoutId;
 
-    @NotBlank
+    @Column(nullable = false)
     private String workoutName;
 
-    @NotNull
+    @Column(nullable = false)
     private Instant startedAt;
 
-    @NotNull
+    @Column(nullable = false)
     private Instant endedAt;
 
-    @NotNull
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<@Valid SessionExercise> sessionExercises = new ArrayList<>();
+    private List<SessionExercise> sessionExercises = new ArrayList<>();
 
     public UUID getId() {
         return id;
@@ -103,10 +98,5 @@ public class Session {
     public void removeSessionExercise(SessionExercise sessionExercise) {
         sessionExercises.remove(sessionExercise);
         sessionExercise.setSession(null);
-    }
-
-    @AssertTrue(message = "endedAt darf nicht vor startedAt liegen")
-    public boolean isTimeRangeValid() {
-        return startedAt == null || endedAt == null || !endedAt.isBefore(startedAt);
     }
 }

@@ -6,12 +6,12 @@ import org.hibernate.annotations.UuidGenerator;
 
 import de.patrickoeder.gymrats.user.User;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class Workout {
     @UuidGenerator
     private UUID id;
 
-    @NotBlank 
+    @Column(nullable = false)
     private String name;
 
     private String description;

@@ -5,11 +5,10 @@ import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
 import de.patrickoeder.gymrats.exercise.Exercise;
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.persistence.Entity;
 
 @Entity
@@ -18,30 +17,24 @@ public class WorkoutExercise {
     @UuidGenerator 
     private UUID id;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "workout_id", nullable = false) 
     private Workout workout;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "exercise_id", nullable = false) 
     private Exercise exercise;
 
-    @NotNull
-    @Positive 
+    @Column(nullable = false)
     private Integer position;
 
-    @NotNull
-    @Positive
+    @Column(nullable = false)
     private Integer plannedSets;
 
-    @NotNull
-    @Positive
+    @Column(nullable = false)
     private Integer minReps;
 
-    @NotNull
-    @Positive
+    @Column(nullable = false)
     private Integer maxReps;
 
 

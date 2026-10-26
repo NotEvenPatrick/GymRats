@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import de.patrickoeder.gymrats.exercise.MuscleGroup;
-import jakarta.validation.constraints.AssertTrue;
 
 public class SessionExercisePreviewResponse {
     private UUID sourceExerciseId;
@@ -79,10 +78,5 @@ public class SessionExercisePreviewResponse {
 
     public void setSets(List<SessionSetPreviewResponse> sets) {
         this.sets = sets;
-    }
-
-    @AssertTrue(message = "minReps darf nicht größer als maxReps sein")
-    public boolean isRepetitionRangeValid() {
-        return minReps <= maxReps;
     }
 }

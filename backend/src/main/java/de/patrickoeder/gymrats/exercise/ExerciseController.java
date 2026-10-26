@@ -23,37 +23,37 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/exercises")
 public class ExerciseController {
 
-	private final ExerciseService exerciseService;
+    private final ExerciseService exerciseService;
 
-	public ExerciseController(ExerciseService exerciseService) {
-		this.exerciseService = exerciseService;
-	}
+    public ExerciseController(ExerciseService exerciseService) {
+        this.exerciseService = exerciseService;
+    }
 
-	@PostMapping
-	public ResponseEntity<ExerciseResponse> create(@Valid @RequestBody ExerciseCreateRequest request) {
-		ExerciseResponse createdExercise = exerciseService.create(request);
-		return ResponseEntity.created(URI.create("/api/exercises/" + createdExercise.getId()))
-				.body(createdExercise);
-	}
+    @PostMapping
+    public ResponseEntity<ExerciseResponse> create(@Valid @RequestBody ExerciseCreateRequest request) {
+        ExerciseResponse createdExercise = exerciseService.create(request);
+        return ResponseEntity.created(URI.create("/api/exercises/" + createdExercise.getId()))
+                .body(createdExercise);
+    }
 
-	@GetMapping
-	public List<ExerciseResponse> getAll() {
-		return exerciseService.getAll();
-	}
+    @GetMapping
+    public List<ExerciseResponse> getAll() {
+        return exerciseService.getAll();
+    }
 
-	@GetMapping("/{id}")
-	public ExerciseResponse getById(@PathVariable UUID id) {
-		return exerciseService.getById(id);
-	}
+    @GetMapping("/{id}")
+    public ExerciseResponse getById(@PathVariable UUID id) {
+        return exerciseService.getById(id);
+    }
 
-	@PutMapping("/{id}")
-	public ExerciseResponse update(@PathVariable UUID id, @Valid @RequestBody ExerciseUpdateRequest request) {
-		return exerciseService.update(id, request);
-	}
+    @PutMapping("/{id}")
+    public ExerciseResponse update(@PathVariable UUID id, @Valid @RequestBody ExerciseUpdateRequest request) {
+        return exerciseService.update(id, request);
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable UUID id) {
-		exerciseService.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        exerciseService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

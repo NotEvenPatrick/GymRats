@@ -1,11 +1,10 @@
 package de.patrickoeder.gymrats.exercise;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
@@ -16,10 +15,10 @@ public class Exercise {
     @UuidGenerator
     private UUID id;
 
-    @NotBlank 
+    @Column(nullable = false)
     private String name;
 
-    @NotNull 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MuscleGroup muscleGroup;
 

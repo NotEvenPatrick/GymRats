@@ -1,19 +1,15 @@
 package de.patrickoeder.gymrats.session;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.FetchType;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,40 +25,34 @@ public class SessionExercise {
     @UuidGenerator
     private UUID id;
 
-    @NotNull
+    @Column(nullable = false)
     private UUID sourceExerciseId;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "session_id", nullable = false)
     private Session session;
 
-    @NotBlank
+    @Column(nullable = false)
     private String exerciseName;
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MuscleGroup muscleGroup;
 
-    @NotNull
-    @Min(1)
+    @Column(nullable = false)
     private Integer position;
 
-    @NotNull
-    @Min(1)
+    @Column(nullable = false)
     private Integer plannedSets;
 
-    @NotNull
-    @Min(1)
+    @Column(nullable = false)
     private Integer minReps;
 
-    @NotNull
-    @Min(1)
+    @Column(nullable = false)
     private Integer maxReps;
 
-    @NotNull
     @OneToMany(mappedBy = "sessionExercise", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<@Valid SessionSet> sets = new ArrayList<>();
+    private List<SessionSet> sets = new ArrayList<>();
 
     public UUID getId() {
         return id;
@@ -144,10 +134,5 @@ public class SessionExercise {
     public void removeSet(SessionSet set) {
         sets.remove(set);
         set.setSessionExercise(null);
-    }
-
-    @AssertTrue(message = "minReps darf nicht größer als maxReps sein")
-    public boolean isRepetitionRangeValid() {
-        return minReps == null || maxReps == null || minReps <= maxReps;
     }
 }

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface WorkoutRepository extends JpaRepository<Workout, UUID>  {
     
-    List<Workout> findAllByOwnerId(UUID ownerId);
+    List<Workout> findAllByOwner_Id(UUID ownerId);
 
     Optional<Workout> findByIdAndOwner_Id(UUID id, UUID ownerId);
 }

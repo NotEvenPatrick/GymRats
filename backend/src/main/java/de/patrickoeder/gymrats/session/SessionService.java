@@ -49,7 +49,7 @@ public class SessionService {
     }
 
     @Transactional(readOnly = true)
-    public SessionPreviewResponse prepareSessionPreviewResponse(UUID workoutId, UUID userId) {
+    public SessionPreviewResponse getSessionPreview(UUID workoutId, UUID userId) {
         Workout workout = workoutRepository.findByIdAndOwner_Id(workoutId, userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Workout not found"));
         return toPreviewResponse(workout);
@@ -73,7 +73,8 @@ public class SessionService {
         session.setOwner(owner);
         session.setSourceWorkoutId(workout.getId());
         session.setWorkoutName(workout.getName());
-        session.setStartedAt(request.getStartedAt());
+        // Durch die Uhrzeit-Toleranz darf startedAt knapp nach endedAt liegen.
+        session.setStartedAt(request.getStartedAt().isAfter(endedAt) ? endedAt : request.getStartedAt());
         session.setEndedAt(endedAt);
 
         int totalSets = 0;

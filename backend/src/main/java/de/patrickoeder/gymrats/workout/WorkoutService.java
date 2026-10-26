@@ -105,7 +105,7 @@ public class WorkoutService {
 
     @Transactional(readOnly = true)
     public List<WorkoutResponse> getAllByOwner(UUID ownerId) {
-        return workoutRepository.findAllByOwnerId(ownerId).stream()
+        return workoutRepository.findAllByOwner_Id(ownerId).stream()
                 .map(this::toResponse)
                 .toList();
     }

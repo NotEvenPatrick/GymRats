@@ -10,8 +10,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -20,20 +18,19 @@ public class User {
     @UuidGenerator 
     private UUID id;
 
-    @NotBlank 
+    @Column(nullable = false)
     private String firstName;
 
-    @NotBlank 
+    @Column(nullable = false)
     private String lastName;
 
-    @NotBlank
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank
+    @Column(nullable = false)
     private String passwordHash;
 
-    @NotNull 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
