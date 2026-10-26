@@ -1,23 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 import { Header } from './header';
-import { provideRouter } from '@angular/router';
+import { AuthService } from '../../features/auth/services/auth-service';
 
 describe('Header', () => {
-  let component: Header;
-  let fixture: ComponentFixture<Header>;
+  const authService = { logout: vi.fn() };
 
   beforeEach(async () => {
+    authService.logout.mockReset();
     await TestBed.configureTestingModule({
       imports: [Header],
-      providers: [provideRouter([])]
+      providers: [provideRouter([]), { provide: AuthService, useValue: authService }],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(Header);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('meldet ab und navigiert zum Login', () => {
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(Header);
+
+    fixture.componentInstance.onLogout();
+
+    expect(authService.logout).toHaveBeenCalledOnce();
+    expect(navigate).toHaveBeenCalledWith(['/login']);
   });
 });
