@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import de.patrickoeder.gymrats.security.CurrentUser;
 import de.patrickoeder.gymrats.workout.dto.WorkoutRequest;
 import de.patrickoeder.gymrats.workout.dto.WorkoutResponse;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class WorkoutController {
 
     @PostMapping
     public ResponseEntity<WorkoutResponse> createWorkout(@Valid @RequestBody WorkoutRequest request, @AuthenticationPrincipal Jwt jwt) {
-        UUID ownerId = UUID.fromString(jwt.getSubject());
+        UUID ownerId = CurrentUser.id(jwt);
         WorkoutResponse response = workoutService.createWorkout(request, ownerId);
         URI location = URI.create("/api/workouts/" + response.getId());
     
@@ -43,20 +44,20 @@ public class WorkoutController {
 
     @GetMapping
     public List<WorkoutResponse> getAllWorkouts(@AuthenticationPrincipal Jwt jwt) {
-        UUID ownerId = UUID.fromString(jwt.getSubject());
+        UUID ownerId = CurrentUser.id(jwt);
         return workoutService.getAllByOwner(ownerId);
     }
 
     @GetMapping("/{id}")
     public WorkoutResponse getWorkoutById( @PathVariable UUID id, @AuthenticationPrincipal Jwt jwt) {
-        UUID ownerId = UUID.fromString(jwt.getSubject());
+        UUID ownerId = CurrentUser.id(jwt);
         return workoutService.getByIdAndOwner(id, ownerId);
     }
     
     @PutMapping("/{id}")
     public WorkoutResponse updateWorkout(
         @PathVariable UUID id, @Valid @RequestBody WorkoutRequest request, @AuthenticationPrincipal Jwt jwt) {
-        UUID ownerId = UUID.fromString(jwt.getSubject());
+        UUID ownerId = CurrentUser.id(jwt);
         return workoutService.updateWorkout(id, ownerId, request);
     }
 
@@ -65,7 +66,7 @@ public class WorkoutController {
         @PathVariable UUID id,
         @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID ownerId = UUID.fromString(jwt.getSubject());
+        UUID ownerId = CurrentUser.id(jwt);
         workoutService.deleteWorkout(id, ownerId);
         return ResponseEntity.noContent().build();
     }

@@ -2,6 +2,7 @@ package de.patrickoeder.gymrats.session;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import de.patrickoeder.gymrats.security.CurrentUser;
 import de.patrickoeder.gymrats.session.dto.SessionPreviewResponse;
 import de.patrickoeder.gymrats.session.dto.SessionRequest;
 import de.patrickoeder.gymrats.session.dto.SessionResponse;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -37,14 +37,14 @@ public class SessionController {
     @GetMapping("/preview/{workoutId}")
     public SessionPreviewResponse prepareSessionPreviewResponse(@PathVariable UUID workoutId,
             @AuthenticationPrincipal Jwt jwt) {
-        UUID userId = UUID.fromString(jwt.getSubject());
+        UUID userId = CurrentUser.id(jwt);
         return sessionService.prepareSessionPreviewResponse(workoutId, userId);
     }
 
     @PostMapping
     public ResponseEntity<SessionResponse> createSession(@Valid @RequestBody SessionRequest request,
             @AuthenticationPrincipal Jwt jwt) {
-        UUID userId = UUID.fromString(jwt.getSubject());
+        UUID userId = CurrentUser.id(jwt);
         SessionResponse response = sessionService.createSession(request, userId);
         URI location = URI.create("/api/sessions/" + response.getId());
         return ResponseEntity.created(location).body(response);
@@ -52,14 +52,14 @@ public class SessionController {
 
     @GetMapping
     public List<SessionSummaryResponse> getSessionHistory(@AuthenticationPrincipal Jwt jwt) {
-        UUID userId = UUID.fromString(jwt.getSubject());
+        UUID userId = CurrentUser.id(jwt);
         return sessionService.getSessionHistory(userId);
     }
 
     @GetMapping("/{sessionId}")
     public SessionResponse getSession(@PathVariable UUID sessionId,
             @AuthenticationPrincipal Jwt jwt) {
-        UUID userId = UUID.fromString(jwt.getSubject());
+        UUID userId = CurrentUser.id(jwt);
         return sessionService.getSession(sessionId, userId);
     }
     

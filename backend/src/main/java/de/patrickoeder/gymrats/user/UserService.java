@@ -44,15 +44,7 @@ public class UserService {
         user.setPasswordHash(passwordEncoder.encode(request.getPassword())); 
         user.setRole(Role.ATHLETE); // Default role
 
-        User savedUser = userRepository.save(user);
-
-        UserResponse response = new UserResponse();
-        response.setId(savedUser.getId());
-        response.setFirstName(savedUser.getFirstName());
-        response.setLastName(savedUser.getLastName());
-        response.setEmail(savedUser.getEmail());
-
-        return response;
+        return toResponse(userRepository.save(user));
     }
 
     public LoginResponse loginUser(LoginRequest request) {
@@ -89,12 +81,15 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Benutzer nicht gefunden."));
 
+        return toResponse(user);
+    }
+
+    private static UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
         response.setEmail(user.getEmail());
-
         return response;
     }
 }
