@@ -11,7 +11,7 @@ import de.patrickoeder.gymrats.user.User;
 import de.patrickoeder.gymrats.user.UserRepository;
 
 @Configuration
-@Profile("dev")
+@Profile({"dev", "e2e"})
 public class DataInitializer {
 
     @Bean
