@@ -19,8 +19,7 @@ public class SessionExerciseRequest {
     private Integer position;
 
     @NotNull
-    @Valid
-    private List<SessionSetRequest> sets = new ArrayList<>();
+    private List<@Valid SessionSetRequest> sets = new ArrayList<>();
 
     public UUID getSourceExerciseId() {
         return sourceExerciseId;

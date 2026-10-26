@@ -13,9 +13,8 @@ public class WorkoutRequest {
 
     private String description;
 
-    @Valid
     @NotEmpty 
-    private List<WorkoutExerciseRequest> exercises = new ArrayList<>();
+    private List<@Valid WorkoutExerciseRequest> exercises = new ArrayList<>();
 
     public String getName() {
         return name;

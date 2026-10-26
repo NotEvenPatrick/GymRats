@@ -44,9 +44,8 @@ public class Session {
     private Instant endedAt;
 
     @NotNull
-    @Valid
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SessionExercise> sessionExercises = new ArrayList<>();
+    private List<@Valid SessionExercise> sessionExercises = new ArrayList<>();
 
     public UUID getId() {
         return id;

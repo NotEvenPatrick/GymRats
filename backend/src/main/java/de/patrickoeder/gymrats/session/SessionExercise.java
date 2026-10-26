@@ -61,9 +61,8 @@ public class SessionExercise {
     private Integer maxReps;
 
     @NotNull
-    @Valid
     @OneToMany(mappedBy = "sessionExercise", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SessionSet> sets = new ArrayList<>();
+    private List<@Valid SessionSet> sets = new ArrayList<>();
 
     public UUID getId() {
         return id;

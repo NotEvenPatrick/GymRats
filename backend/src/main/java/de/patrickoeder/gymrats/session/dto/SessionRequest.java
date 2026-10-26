@@ -17,8 +17,7 @@ public class SessionRequest {
     private Instant startedAt;
 
     @NotEmpty
-    @Valid
-    private List<SessionExerciseRequest> sessionExercises = new ArrayList<>();
+    private List<@Valid SessionExerciseRequest> sessionExercises = new ArrayList<>();
 
     public UUID getSourceWorkoutId() {
         return sourceWorkoutId;
