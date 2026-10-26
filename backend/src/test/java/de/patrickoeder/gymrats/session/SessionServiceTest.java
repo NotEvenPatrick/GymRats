@@ -138,6 +138,27 @@ class SessionServiceTest {
     }
 
     @Test
+    void capsStartAtEndWhenWithinClockTolerance() {
+        SessionRequest request = request(exercise(1, benchId, set(1, 8)));
+        request.setStartedAt(Instant.now().plusSeconds(30));
+
+        SessionResponse response = sessionService.createSession(request, userId);
+
+        assertThat(response.getStartedAt()).isEqualTo(response.getEndedAt());
+    }
+
+    @Test
+    void keepsStartBeforeEndUnchanged() {
+        Instant startedAt = Instant.now().minusSeconds(600);
+        SessionRequest request = request(exercise(1, benchId, set(1, 8)));
+        request.setStartedAt(startedAt);
+
+        SessionResponse response = sessionService.createSession(request, userId);
+
+        assertThat(response.getStartedAt()).isEqualTo(startedAt);
+    }
+
+    @Test
     void returnsNotFoundForForeignWorkout() {
         UUID otherUser = UUID.randomUUID();
         when(userRepository.findById(otherUser)).thenReturn(Optional.of(new User()));
