@@ -21,8 +21,8 @@ public class DataInitializer {
                 User user = new User();
                 user.setFirstName("Patrick");
                 user.setLastName("Oeder");
-                user.setEmail("patrick@example.com");
-                user.setPasswordHash(passwordEncoder.encode("TestPassword123!"));
+                user.setEmail("test@user.com");
+                user.setPasswordHash(passwordEncoder.encode("TestPassword123"));
                 user.setRole(Role.ATHLETE);
                 userRepository.save(user);
             }

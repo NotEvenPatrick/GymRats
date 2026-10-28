@@ -1,28 +1,11 @@
 const { Selector } = require('testcafe');
+const { url, login } = require('./test-utils');
 
 fixture`Workout CRUD`
-    .page`http://localhost:4200/login`;
+    .page(url('/login'));
 
 test('creates, edits and deletes a workout', async t => {
-    // Arrange: Start with a clean authentication state.
-    await t.eval(() => {
-        localStorage.clear();
-        sessionStorage.clear();
-    });
-
-    await t.navigateTo('http://localhost:4200/login');
-
-    // Log in.
-    await t
-        .typeText('#email', 'patrick@example.com')
-        .typeText('#password', 'TestPassword123!')
-        .click('button[type="submit"]')
-        .expect(
-            Selector('h1')
-                .withText('Dein Training. Dein Fortschritt.')
-                .exists
-        )
-        .ok('Login should succeed.', { timeout: 10000 });
+    await login(t);
 
     // Use a unique name to avoid collisions with previous test runs.
     const workoutName = `E2E Workout ${Date.now()}`;
@@ -35,7 +18,7 @@ test('creates, edits and deletes a workout', async t => {
         workoutCell(name).parent('tr');
 
     // CREATE: Open the form.
-    await t.navigateTo('http://localhost:4200/workouts/new');
+    await t.navigateTo(url('/workouts/new'));
 
     await t
         .typeText('input[formcontrolname="name"]', workoutName)

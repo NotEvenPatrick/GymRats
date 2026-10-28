@@ -1,28 +1,11 @@
 const { Selector } = require('testcafe');
+const { url, login } = require('./test-utils');
 
 fixture`Workout Session`
-    .page`http://localhost:4200/login`;
+    .page(url('/login'));
 
 test('creates a workout, trains it and verifies the session history', async t => {
-    // Arrange: Start with a clean authentication state.
-    await t.eval(() => {
-        localStorage.clear();
-        sessionStorage.clear();
-    });
-
-    await t.navigateTo('http://localhost:4200/login');
-
-    // Log in.
-    await t
-        .typeText('#email', 'patrick@example.com')
-        .typeText('#password', 'TestPassword123!')
-        .click('button[type="submit"]')
-        .expect(
-            Selector('h1')
-                .withText('Dein Training. Dein Fortschritt.')
-                .exists
-        )
-        .ok('Login should succeed.', { timeout: 10000 });
+    await login(t);
 
     // Use a unique name to avoid collisions with previous test runs.
     const workoutName = `E2E Session ${Date.now()}`;
@@ -35,7 +18,7 @@ test('creates a workout, trains it and verifies the session history', async t =>
         workoutCell(name).parent('tr');
 
     // CREATE WORKOUT: 3 exercises with 3 planned sets each.
-    await t.navigateTo('http://localhost:4200/workouts/new');
+    await t.navigateTo(url('/workouts/new'));
 
     await t.typeText('input[formcontrolname="name"]', workoutName);
 
@@ -160,7 +143,7 @@ test('creates a workout, trains it and verifies the session history', async t =>
         .ok('The session should be saved.', { timeout: 10000 });
 
     // HISTORY: open the details of the new session.
-    await t.navigateTo('http://localhost:4200/sessions');
+    await t.navigateTo(url('/sessions'));
 
     await t.click(
         Selector('a.session-card-link')
@@ -215,7 +198,7 @@ test('creates a workout, trains it and verifies the session history', async t =>
     ], 'Only the complete Deadlift set should be saved.');
 
     // CLEANUP: remove the workout again.
-    await t.navigateTo('http://localhost:4200/workouts');
+    await t.navigateTo(url('/workouts'));
     await t.click(
         workoutRow(workoutName)
             .find('button')
