@@ -11,13 +11,13 @@ import de.patrickoeder.gymrats.user.User;
 import de.patrickoeder.gymrats.user.UserRepository;
 
 @Configuration
-@Profile({"dev", "e2e"})
+@Profile({ "dev", "e2e" })
 public class DataInitializer {
 
     @Bean
     CommandLineRunner init(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if (!userRepository.existsByEmail("patrick@example.com")) {
+            if (!userRepository.existsByEmail("test@user.com")) {
                 User user = new User();
                 user.setFirstName("Patrick");
                 user.setLastName("Oeder");
