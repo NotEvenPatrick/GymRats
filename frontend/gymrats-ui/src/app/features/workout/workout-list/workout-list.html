@@ -1,8 +1,18 @@
+<header class="page-header">
+    <div>
+        <p class="page-tag" aria-hidden="true">02 / Planung</p>
+        <h1>Trainingspläne</h1>
+        <p class="page-subtitle">Deine Pläne</p>
+    </div>
+    <button mat-flat-button (click)="createWorkout()">Trainingsplan erstellen</button>
+</header>
+
 @if (loading()) {
-<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+<mat-progress-spinner mode="indeterminate" aria-label="Trainingspläne werden geladen"></mat-progress-spinner>
 } @else if (loadError(); as errorMessage) {
-<p role="alert">{{ errorMessage }}</p>
+<p class="state-error" role="alert">{{ errorMessage }}</p>
 } @else {
+<div class="table-scroll">
 <table mat-table [dataSource]="workouts()" multiTemplateDataRows>
 
     <!-- Name -->
@@ -105,11 +115,11 @@
 
     <!-- Leere Liste -->
     <tr *matNoDataRow>
-        <td [attr.colspan]="displayedColumns.length">
+        <td class="empty-state" [attr.colspan]="displayedColumns.length">
             Noch keine Trainingspläne vorhanden.
         </td>
     </tr>
 
 </table>
+</div>
 }
-<button mat-raised-button color="primary" (click)="createWorkout()">Trainingsplan erstellen</button>

@@ -1,27 +1,137 @@
+@use '@angular/material' as mat;
+
 .welcome {
-  padding: 2rem 0;
+  padding: 2rem 0 3rem;
+  border-bottom: var(--gr-border-width) solid var(--gr-line);
+  margin-bottom: 2.5rem;
 }
 
 .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  font-family: var(--gr-font-mono);
   font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gr-text-muted);
+}
+
+// Stickerartiger Akzent
+.sticker {
+  display: inline-block;
+  background: var(--gr-accent);
+  color: var(--gr-on-accent);
+  padding: 0.25rem 0.6rem;
+  transform: rotate(-3deg);
+  border: 2px solid var(--gr-bg);
+  outline: 2px solid var(--gr-accent);
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.15;
+  font-family: var(--gr-font-display);
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
   margin: 0;
+  color: var(--gr-text);
 }
 
-.welcome > p:last-child {
-  max-width: 42rem;
-  margin-top: 1rem;
+// Siebdruck-/Stencil-Anmutung: dünne Schnitte durch die Schrift
+.stencil {
+  display: block;
+  margin-left: clamp(0rem, 4vw, 3rem);
+  color: var(--gr-accent);
+  background: repeating-linear-gradient(
+    180deg,
+    var(--gr-accent) 0 0.34em,
+    transparent 0.34em 0.37em
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lead {
+  max-width: 38rem;
+  margin: 1.5rem 0 0;
+  padding-left: 1rem;
+  border-left: 4px solid var(--gr-accent);
+  font-size: 1.1rem;
+  color: var(--gr-text-muted);
 }
 
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
+  counter-reset: action;
+}
+
+mat-card {
+  @include mat.card-overrides(
+    (
+      elevated-container-color: var(--gr-surface-1),
+      elevated-container-shape: 0,
+      elevated-container-elevation: none,
+      title-text-font: var(--gr-font-display),
+      title-text-size: 1.6rem,
+      title-text-weight: 900,
+      subtitle-text-color: var(--gr-text-muted),
+    )
+  );
+  @include mat.button-overrides(
+    (
+      filled-container-shape: 0,
+      filled-container-color: var(--gr-accent),
+      filled-label-text-color: var(--gr-on-accent),
+      filled-label-text-weight: 800,
+      outlined-container-shape: 0,
+      outlined-outline-color: var(--gr-line-strong),
+      outlined-label-text-color: var(--gr-text),
+      outlined-label-text-weight: 700,
+    )
+  );
+
+  border: var(--gr-border-width) solid var(--gr-line-strong);
+  border-top: 6px solid var(--gr-accent);
+  box-shadow: 6px 6px 0 var(--gr-surface-3);
+  padding-bottom: 0.5rem;
+
+  &:hover {
+    border-color: var(--gr-accent);
+  }
+
+  // Leichte Asymmetrie
+  &:nth-child(even) {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    &:nth-child(even) {
+      margin-top: 0;
+    }
+  }
+}
+
+mat-card-header {
+  flex-wrap: wrap;
+  padding-top: 1rem;
+}
+
+.tag {
+  flex: 0 0 100%;
+  margin-bottom: 0.75rem;
+  font-family: var(--gr-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--gr-accent);
+}
+
+mat-card-title {
+  text-transform: uppercase;
 }

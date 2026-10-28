@@ -1,24 +1,123 @@
+@use '@angular/material' as mat;
+
+header {
+  border-bottom: var(--gr-border-width) solid var(--gr-line-strong);
+  // Warnstreifen als technische Kante
+  box-shadow: 0 4px 0 -1px var(--gr-bg), 0 6px 0 -1px var(--gr-accent);
+  background: var(--gr-surface-1);
+  margin-bottom: 8px;
+}
+
 mat-toolbar {
-  gap: 1rem;
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: transparent,
+      container-text-color: var(--gr-text),
+    )
+  );
+  @include mat.button-overrides(
+    (
+      outlined-container-shape: 0,
+      outlined-outline-color: var(--gr-line-strong),
+      outlined-label-text-color: var(--gr-text),
+      outlined-label-text-weight: 700,
+    )
+  );
+
+  gap: 1.5rem;
+  min-height: 64px;
+  height: auto;
+  flex-wrap: wrap;
+  padding: 0 24px;
+  box-sizing: border-box;
 }
 
 .brand {
-  color: inherit;
+  display: inline-flex;
+  align-items: stretch;
+  color: var(--gr-text);
   text-decoration: none;
-  font-weight: 700;
+  font-family: var(--gr-font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  transform: rotate(-2deg);
+
+  .brand-mark {
+    background: var(--gr-accent);
+    color: var(--gr-on-accent);
+    padding: 0.2em 0.35em;
+  }
+
+  .brand-name {
+    border: var(--gr-border-width) solid var(--gr-accent);
+    border-left: 0;
+    padding: 0.2em 0.35em;
+  }
 }
 
 nav {
   display: flex;
-  gap: 0.25rem;
+  flex-wrap: wrap;
+  gap: 0;
+
+  a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem 1.1rem;
+    color: var(--gr-text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-bottom: 4px solid transparent;
+    border-left: 1px solid var(--gr-line);
+
+    &:last-child {
+      border-right: 1px solid var(--gr-line);
+    }
+
+    &:hover {
+      color: var(--gr-text);
+      background: var(--gr-surface-2);
+    }
+  }
+
+  .nav-index {
+    font-family: var(--gr-font-mono);
+    font-size: 0.7rem;
+    color: var(--gr-accent);
+  }
 
   .active-link {
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 6px;
+    color: var(--gr-text);
+    background: var(--gr-surface-2);
+    border-bottom-color: var(--gr-accent);
   }
 }
 
 .spacer {
   flex: 1 1 auto;
+}
+
+@media (max-width: 900px) {
+  mat-toolbar {
+    padding: 8px 16px;
+    gap: 0.75rem;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    border-top: 1px solid var(--gr-line);
+
+    a {
+      padding: 0.75rem 0.85rem;
+      white-space: nowrap;
+    }
+  }
 }

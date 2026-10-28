@@ -1,0 +1,59 @@
+@use '../../../shared/styles/page';
+@use '@angular/material' as mat;
+
+.page-header {
+  @include page.page-header;
+}
+
+.table-scroll {
+  @include page.table-scroll;
+}
+
+table {
+  width: 100%;
+  min-width: 640px;
+}
+
+th[mat-header-cell] {
+  font-family: var(--gr-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: var(--gr-border-width) solid var(--gr-line-strong);
+}
+
+td[mat-cell]:first-child {
+  font-weight: 700;
+}
+
+tr[mat-row]:hover {
+  background: var(--gr-surface-2);
+}
+
+td[mat-cell]:last-child {
+  white-space: nowrap;
+}
+
+button[color='warn'] {
+  @include mat.button-overrides(
+    (
+      text-label-text-color: var(--gr-error),
+    )
+  );
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+  color: var(--gr-text-muted);
+  font-family: var(--gr-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.state-error {
+  @include page.state-message(var(--gr-error));
+}
+
+mat-progress-spinner {
+  margin: 2rem auto;
+}

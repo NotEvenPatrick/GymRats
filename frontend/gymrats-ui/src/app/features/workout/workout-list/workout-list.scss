@@ -1,13 +1,46 @@
+@use '../../../shared/styles/page';
+
+.page-header {
+    @include page.page-header;
+}
+
+.table-scroll {
+    @include page.table-scroll;
+}
+
+table[mat-table] {
+    width: 100%;
+    min-width: 640px;
+}
+
+th[mat-header-cell] {
+    font-family: var(--gr-font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: var(--gr-border-width) solid var(--gr-line-strong);
+}
+
+td[mat-cell]:first-child {
+    font-weight: 700;
+}
+
+td[mat-cell]:last-child {
+    white-space: nowrap;
+}
+
 .workout-row {
     cursor: pointer;
 }
 
 .workout-row:hover {
-    background: rgba(128, 128, 128, 0.08);
+    background: var(--gr-surface-2);
 }
 
 .expanded-row {
     border-bottom-color: transparent;
+    background: var(--gr-surface-2);
+    box-shadow: inset 6px 0 0 var(--gr-accent);
 }
 
 .detail-row-hidden {
@@ -15,11 +48,17 @@
 }
 
 .workout-detail {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.5rem 1.5rem;
+    background: var(--gr-surface-2);
 }
 
 .workout-detail h3 {
-    margin-top: 0;
+    margin: 0 0 1rem;
+    font-family: var(--gr-font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gr-accent);
 }
 
 .exercise-detail-table {
@@ -31,5 +70,29 @@
 .exercise-detail-table td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+    border-bottom: 1px solid var(--gr-line);
+}
+
+.exercise-detail-table th {
+    font-family: var(--gr-font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gr-text-muted);
+}
+
+.empty-state {
+    padding: 2rem 1rem;
+    color: var(--gr-text-muted);
+    font-family: var(--gr-font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.state-error {
+    @include page.state-message(var(--gr-error));
+}
+
+mat-progress-spinner {
+    margin: 2rem auto;
 }

@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  background: var(--gr-surface-1);
+  border-top: 6px solid var(--gr-accent);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.5rem;
+  min-width: min(480px, 100%);
+  box-sizing: border-box;
+
+  button[type='submit'] {
+    align-self: flex-end;
+  }
+}
+
+.form-title {
+  margin: 0 0 1.25rem;
+  font-family: var(--gr-font-display);
+  font-size: 1.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--gr-text);
+}

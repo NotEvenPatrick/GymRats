@@ -1,3 +1,5 @@
+@use '../../../shared/styles/page';
+
 .table-container {
     width: 100%;
     max-width: 100%;
@@ -91,4 +93,68 @@ mat-form-field {
     .form-actions {
         flex-wrap: wrap;
     }
+}
+
+form {
+    @include page.panel;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.page-tag {
+    margin: 0 0 0.5rem;
+    font-family: var(--gr-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gr-accent);
+}
+
+h2 {
+    margin: 0 0 1.5rem;
+    font-family: var(--gr-font-display);
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+h3 {
+    margin: 1.5rem 0 0.75rem;
+    padding-top: 1rem;
+    border-top: var(--gr-border-width) solid var(--gr-line);
+    font-family: var(--gr-font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gr-text-muted);
+}
+
+th {
+    font-family: var(--gr-font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gr-text-muted);
+    border-bottom: var(--gr-border-width) solid var(--gr-line-strong);
+}
+
+tbody tr {
+    background: var(--gr-surface-1);
+    border-bottom: 1px solid var(--gr-line);
+}
+
+.validation-error {
+    margin: 0.5rem 0 1rem;
+    padding: 0.75rem 1rem;
+    border-left: 8px solid var(--gr-error);
+    background: var(--gr-surface-2);
+    color: var(--gr-text);
+}
+
+.form-actions {
+    padding-top: 1.5rem;
+    border-top: var(--gr-border-width) solid var(--gr-line);
 }

@@ -1,8 +1,18 @@
+<header class="page-header">
+    <div>
+        <p class="page-tag" aria-hidden="true">01 / Bibliothek</p>
+        <h1>Übungen</h1>
+        <p class="page-subtitle">Deine Übungsbibliothek</p>
+    </div>
+    <button mat-flat-button (click)="openExerciseDialog()">Übung hinzufügen</button>
+</header>
+
 @if (loading()) {
-<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+<mat-progress-spinner mode="indeterminate" aria-label="Übungen werden geladen"></mat-progress-spinner>
 } @else if (loadError(); as errorMessage) {
-<p role="alert">{{ errorMessage }}</p>
+<p class="state-error" role="alert">{{ errorMessage }}</p>
 } @else {
+<div class="table-scroll">
 <table mat-table [dataSource]="exercises()">
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -31,8 +41,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
     <tr *matNoDataRow>
-        <td [attr.colspan]="displayedColumns.length">Noch keine Übungen vorhanden.</td>
+        <td class="empty-state" [attr.colspan]="displayedColumns.length">Noch keine Übungen vorhanden.</td>
     </tr>
 </table>
+</div>
 }
-<button mat-raised-button color="primary" (click)="openExerciseDialog()">Übung hinzufügen</button>

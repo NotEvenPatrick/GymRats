@@ -1,39 +1,166 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
+// GymRats – Industrial Hardcore. Design-Tokens zentral hier definiert.
 @use '@angular/material' as mat;
+
+// Farben
+$gr-bg: #1a1917; // warmes Anthrazit
+$gr-surface-1: #232220; // Beton, dunkel
+$gr-surface-2: #2e2d2a; // Stahl, matt
+$gr-surface-3: #3b3a36; // Stahl, hell
+$gr-line: #55534d; // technische Trennlinie
+$gr-line-strong: #8a877e;
+$gr-text: #ece9e1; // gebrochenes Weiß
+$gr-text-muted: #b3b0a5;
+$gr-accent: #c8f22b; // Acid-Lime
+$gr-accent-strong: #deff5a;
+$gr-on-accent: #151700;
+$gr-success: #3ddc84;
+$gr-warning: #ffb020;
+$gr-error: #ff5c4d;
+
+// Typografie
+$gr-font-display: 'Arial Narrow', 'Helvetica Neue', 'Franklin Gothic Medium', Impact, sans-serif;
+$gr-font-ui: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+$gr-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+// Form
+$gr-border-width: 2px;
+$gr-radius: 0;
 
 html {
   height: 100%;
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        theme-type: dark,
+        primary: mat.$green-palette,
+        tertiary: mat.$yellow-palette,
       ),
-      typography: Roboto,
+      typography: (
+        plain-family: $gr-font-ui,
+        brand-family: $gr-font-display,
+      ),
       density: 0,
     )
   );
+
+  // Komponenten-Tokens (öffentliche Overrides-Mixins)
+  @include mat.button-overrides(
+    (
+      filled-container-shape: $gr-radius,
+      filled-container-color: $gr-accent,
+      filled-label-text-color: $gr-on-accent,
+      filled-label-text-weight: 800,
+      outlined-container-shape: $gr-radius,
+      outlined-outline-color: $gr-line-strong,
+      outlined-label-text-color: $gr-text,
+      outlined-label-text-weight: 700,
+      text-container-shape: $gr-radius,
+      text-label-text-color: $gr-text,
+      text-label-text-weight: 700,
+    )
+  );
+  @include mat.icon-button-overrides(
+    (
+      icon-color: $gr-text,
+    )
+  );
+  @include mat.table-overrides(
+    (
+      background-color: transparent,
+      header-headline-color: $gr-text-muted,
+      header-headline-weight: 700,
+      row-item-label-text-color: $gr-text,
+      row-item-outline-color: $gr-line,
+      header-container-height: 48px,
+      row-item-container-height: 56px,
+    )
+  );
+  @include mat.form-field-overrides(
+    (
+      outlined-outline-color: $gr-line-strong,
+      outlined-hover-outline-color: $gr-text,
+      outlined-focus-outline-color: $gr-accent,
+      outlined-error-outline-color: $gr-error,
+      outlined-error-focus-outline-color: $gr-error,
+      outlined-label-text-color: $gr-text-muted,
+      outlined-focus-label-text-color: $gr-accent,
+      outlined-input-text-color: $gr-text,
+      outlined-container-shape: $gr-radius,
+      outlined-outline-width: $gr-border-width,
+      outlined-focus-outline-width: $gr-border-width,
+      error-text-color: $gr-error,
+    )
+  );
+  @include mat.dialog-overrides(
+    (
+      container-color: $gr-surface-1,
+      container-shape: $gr-radius,
+      subhead-color: $gr-text,
+      subhead-font: $gr-font-display,
+      subhead-weight: 900,
+      supporting-text-color: $gr-text-muted,
+    )
+  );
+  @include mat.progress-spinner-overrides(
+    (
+      active-indicator-color: $gr-accent,
+    )
+  );
+
+  // Öffentliche System-Variablen von Angular Material auf die Marken-Tokens abbilden
+  --mat-sys-surface: #{$gr-bg};
+  --mat-sys-surface-container-lowest: #{$gr-bg};
+  --mat-sys-surface-container-low: #{$gr-surface-1};
+  --mat-sys-surface-container: #{$gr-surface-1};
+  --mat-sys-surface-container-high: #{$gr-surface-2};
+  --mat-sys-surface-container-highest: #{$gr-surface-3};
+  --mat-sys-on-surface: #{$gr-text};
+  --mat-sys-on-surface-variant: #{$gr-text-muted};
+  --mat-sys-outline: #{$gr-line-strong};
+  --mat-sys-outline-variant: #{$gr-line};
+  --mat-sys-primary: #{$gr-accent};
+  --mat-sys-on-primary: #{$gr-on-accent};
+  --mat-sys-error: #{$gr-error};
+
+  // Tokens für Komponenten-Styles
+  --gr-bg: #{$gr-bg};
+  --gr-surface-1: #{$gr-surface-1};
+  --gr-surface-2: #{$gr-surface-2};
+  --gr-surface-3: #{$gr-surface-3};
+  --gr-line: #{$gr-line};
+  --gr-line-strong: #{$gr-line-strong};
+  --gr-text: #{$gr-text};
+  --gr-text-muted: #{$gr-text-muted};
+  --gr-accent: #{$gr-accent};
+  --gr-accent-strong: #{$gr-accent-strong};
+  --gr-on-accent: #{$gr-on-accent};
+  --gr-success: #{$gr-success};
+  --gr-warning: #{$gr-warning};
+  --gr-error: #{$gr-error};
+  --gr-font-display: #{$gr-font-display};
+  --gr-font-mono: #{$gr-font-mono};
+  --gr-border-width: #{$gr-border-width};
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
+  color-scheme: dark;
+  background-color: var(--gr-bg);
+  // Matte Rasterstruktur statt Glanz
+  background-image: linear-gradient(rgb(255 255 255 / 2.5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 2.5%) 1px, transparent 1px);
+  background-size: 32px 32px;
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+:focus-visible {
+  outline: 3px solid $gr-accent;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: $gr-accent;
+  color: $gr-on-accent;
+}

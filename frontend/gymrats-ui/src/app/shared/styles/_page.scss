@@ -1,0 +1,57 @@
+// Gemeinsame Bausteine für Listen- und Formularseiten
+@mixin page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  border-bottom: var(--gr-border-width) solid var(--gr-line);
+
+  .page-tag {
+    margin: 0 0 0.5rem;
+    font-family: var(--gr-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gr-accent);
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--gr-font-display);
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--gr-text);
+  }
+
+  .page-subtitle {
+    margin: 0.75rem 0 0;
+    color: var(--gr-text-muted);
+  }
+}
+
+@mixin panel {
+  background: var(--gr-surface-1);
+  border: var(--gr-border-width) solid var(--gr-line-strong);
+  border-top: 6px solid var(--gr-accent);
+  box-shadow: 6px 6px 0 var(--gr-surface-3);
+}
+
+@mixin table-scroll {
+  overflow-x: auto;
+  @include panel;
+}
+
+@mixin state-message($color: var(--gr-text-muted)) {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border: var(--gr-border-width) solid $color;
+  border-left-width: 8px;
+  background: var(--gr-surface-1);
+  color: var(--gr-text);
+}

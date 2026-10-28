@@ -1,20 +1,23 @@
 <header>
     <mat-toolbar>
-        <a class="brand" routerLink="/home">GymRats</a>
+        <a class="brand" routerLink="/home" aria-label="GymRats">
+            <span class="brand-mark">GYM</span><span class="brand-name">RATS</span>
+        </a>
 
         <nav aria-label="Hauptnavigation">
-            @for (item of navItems; track item.route) {
-                <a 
-                [routerLink]="item.route" 
-                routerLinkActive="active-link" 
+            @for (item of navItems; track item.route; let i = $index) {
+                <a
+                [routerLink]="item.route"
+                routerLinkActive="active-link"
                 [routerLinkActiveOptions]="{ exact: true }">
+                <span class="nav-index" aria-hidden="true">0{{ i + 1 }}</span>
                 {{ item.label }}
             </a>
             }
         </nav>
 
         <span class="spacer"></span>
-        
-        <button mat-button (click)="onLogout()">Logout</button>
+
+        <button mat-stroked-button (click)="onLogout()">Logout</button>
     </mat-toolbar>
 </header>
