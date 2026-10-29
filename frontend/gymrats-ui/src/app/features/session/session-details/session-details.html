@@ -1,25 +1,27 @@
-<a mat-button routerLink="/sessions">Zur Trainingshistorie</a>
+<a mat-stroked-button class="back-link" routerLink="/sessions">Zur Trainingshistorie</a>
 
 @if (loading()) {
-<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+<mat-progress-spinner mode="indeterminate" aria-label="Details werden geladen"></mat-progress-spinner>
 }
 @if (error(); as errorMessage) {
-<p role="alert">{{ errorMessage }}</p>
+<p class="state-error" role="alert">{{ errorMessage }}</p>
 } @else if (session(); as details) {
-<h1>{{ details.workoutName }}</h1>
+<header class="page-header">
+    <p class="page-tag" aria-hidden="true">03 / Log</p>
+    <h1>{{ details.workoutName }}</h1>
+    <div class="meta">
+        <p>
+            <strong>Beginn:</strong>
+            {{ details.startedAt | date:'dd.MM.yyyy, HH:mm' }}
+        </p>
+        <p>
+            <strong>Ende:</strong>
+            {{ details.endedAt | date:'dd.MM.yyyy, HH:mm' }}
+        </p>
+    </div>
+</header>
 
-<mat-card>
-    <p>
-        <strong>Beginn:</strong>
-        {{ details.startedAt | date:'dd.MM.yyyy, HH:mm' }}
-    </p>
-    <p>
-        <strong>Ende:</strong>
-        {{ details.endedAt | date:'dd.MM.yyyy, HH:mm' }}
-    </p>
-</mat-card>
-
-<h2>Übungen</h2>
+<h2 class="section-title">Übungen</h2>
 
 @for (exercise of details.sessionExercises; track exercise.id) {
 <mat-card>
@@ -29,12 +31,13 @@
     </mat-card-header>
 
     <mat-card-content>
-        <p>
+        <p class="planned">
             Geplant: {{ exercise.plannedSets }} Sätze,
             {{ exercise.minReps}} - {{ exercise.maxReps }} Wiederholungen
         </p>
 
         @if(exercise.sets.length > 0) {
+        <div class="table-scroll">
         <table>
             <thead>
                 <tr>
@@ -53,8 +56,9 @@
                 }
             </tbody>
         </table>
+        </div>
         } @else {
-        <p>Für diese Übung wurden keine Sätze gespeichert.</p>
+        <p class="state-empty">Für diese Übung wurden keine Sätze gespeichert.</p>
         }
     </mat-card-content>
 </mat-card>

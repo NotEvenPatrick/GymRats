@@ -1,0 +1,137 @@
+@use 'page';
+
+// Gemeinsame Gestaltung für Login und Registrierung
+@mixin auth-page {
+  :host {
+    display: block;
+    max-width: 480px;
+    margin: 0 auto;
+    padding-block: 1rem 2rem;
+  }
+
+  .logo {
+    aspect-ratio: 5 / 2;
+    margin-bottom: -2rem;
+    background: url('../../assets/gymrats_logo_1000.webp') center / contain no-repeat;
+  }
+
+  .auth-panel {
+    position: relative;
+    padding: 1.75rem;
+    @include page.panel;
+  }
+
+  .page-tag {
+    margin: 0 0 0.5rem;
+    font-family: var(--gr-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gr-accent);
+  }
+
+  h2 {
+    margin: 0 0 1.5rem;
+    font-family: var(--gr-font-display);
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  label {
+    font-family: var(--gr-font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gr-text-muted);
+  }
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 52px;
+    padding: 0 0.75rem;
+    background: var(--gr-bg);
+    border: var(--gr-border-width) solid var(--gr-line-strong);
+    border-radius: 0;
+    color: var(--gr-text);
+    font: inherit;
+    font-size: 1.05rem;
+
+    &:hover {
+      border-color: var(--gr-text);
+    }
+
+    &:focus-visible {
+      border-color: var(--gr-accent);
+      outline-offset: 0;
+    }
+
+    &.ng-invalid.ng-touched {
+      border-color: var(--gr-error);
+    }
+  }
+
+  .error {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--gr-error);
+  }
+
+  // Fehler der Anmeldung/Registrierung insgesamt
+  .error[role='alert'] {
+    @include page.state-message(var(--gr-error));
+    font-size: 1rem;
+  }
+
+  button[type='submit'] {
+    min-height: 52px;
+    padding: 0 1.5rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--gr-accent);
+    color: var(--gr-on-accent);
+    font: inherit;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: var(--gr-accent-strong);
+    }
+
+    &:disabled {
+      background: var(--gr-surface-3);
+      color: var(--gr-text-muted);
+      cursor: progress;
+    }
+  }
+
+  .switch {
+    margin: 1.5rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gr-line);
+    color: var(--gr-text-muted);
+
+    a {
+      color: var(--gr-accent);
+      font-weight: 700;
+    }
+  }
+}

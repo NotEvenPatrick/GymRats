@@ -1,7 +1,9 @@
-<div>
-    <h2>Login</h2>
+<div class="logo" role="img" aria-label="GymRats – Train harder. Track everything."></div>
+<div class="auth-panel">
+    <p class="page-tag" aria-hidden="true">GymRats / Anmeldung</p>
+  <h2>Login</h2>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div>
+        <div class="field">
             <label for="email">E-Mail:</label>
             <input id="email" type="email" formControlName="email">
             @if (form.get('email')?.invalid && form.get('email')?.touched) {
@@ -10,7 +12,7 @@
                 </div>
             }
         </div>
-        <div>
+        <div class="field">
             <label for="password">Passwort:</label>
             <input id="password" type="password" formControlName="password">
             @if (form.get('password')?.invalid && form.get('password')?.touched) {
@@ -24,5 +26,5 @@
         }
         <button type="submit" [disabled]="saving()">Login</button>
     </form>
-    <p>Sie haben noch kein Konto? <a routerLink="/register">Registrieren</a></p>
+    <p class="switch">Sie haben noch kein Konto? <a routerLink="/register">Registrieren</a></p>
 </div>

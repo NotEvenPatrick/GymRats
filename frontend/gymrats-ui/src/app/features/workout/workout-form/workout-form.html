@@ -42,7 +42,7 @@
                         </button>
                     </td>
                     <td>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
                             <mat-label>Übung suchen</mat-label>
 
                             <input matInput type="text" formControlName="exerciseSearch"
@@ -69,7 +69,7 @@
                     </td>
 
                     <td>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
                             <mat-label>Geplante Sätze</mat-label>
                             <input matInput formControlName="plannedSets" type="number" min="1">
                             @if (row.controls.plannedSets.hasError('required') &&
@@ -83,7 +83,7 @@
                     </td>
 
                     <td>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
                             <mat-label>Min. Wdh.</mat-label>
                             <input matInput formControlName="minReps" type="number" min="1">
                             @if (row.controls.minReps.hasError('required') && row.controls.minReps.touched) {
@@ -95,7 +95,7 @@
                         </mat-form-field>
                     </td>
                     <td>
-                        <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" subscriptSizing="dynamic">
                             <mat-label>Max. Wdh.</mat-label>
                             <input matInput formControlName="maxReps" type="number" min="1">
                             @if (row.controls.maxReps.hasError('required') && row.controls.maxReps.touched) {

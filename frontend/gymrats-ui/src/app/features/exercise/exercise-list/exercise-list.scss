@@ -57,3 +57,9 @@ button[color='warn'] {
 mat-progress-spinner {
   margin: 2rem auto;
 }
+
+// Aktionsspalte bündig am rechten Rand
+th[mat-header-cell]:last-child,
+td[mat-cell]:last-child {
+  text-align: right;
+}

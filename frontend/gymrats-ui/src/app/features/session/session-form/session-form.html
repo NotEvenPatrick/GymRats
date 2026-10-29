@@ -1,18 +1,20 @@
 @if(loading()) {
-<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+<mat-progress-spinner mode="indeterminate" aria-label="Training wird geladen"></mat-progress-spinner>
 } @else {
 @if(activeSession(); as session) {
 <form [formGroup]="sessionForm">
+    <p class="page-tag" aria-hidden="true">Laufende Session</p>
     <h2>{{ session.workoutName }}</h2>
     <div formArrayName="sessionExercises">
         @for( exercise of session.sessionExercises; track exercise.sourceExerciseId; let exerciseIndex = $index) {
         <mat-card>
             <mat-card-header>
+                <span class="tag" aria-hidden="true">{{ exerciseIndex + 1 < 10 ? '0' : '' }}{{ exerciseIndex + 1 }} / ÜBUNG</span>
                 <mat-card-title>{{ exercise.exerciseName }}</mat-card-title>
             </mat-card-header>
 
             <mat-card-content>
-                <p>
+                <p class="planned">
                     Geplant: {{ exercise.plannedSets }} Sätze, {{ exercise.minReps }}-{{ exercise.maxReps}}
                     Wiederholungen
                 </p>
@@ -20,21 +22,26 @@
                 <div [formArrayName]="exerciseIndex">
                     @for(set of exercise.sets; track set.setNumber; let setIndex = $index) {
                     @let setForm = sessionForm.controls.sessionExercises.at(exerciseIndex).at(setIndex);
-                    <div [formGroupName]="setIndex">
+                    <div class="set" [formGroupName]="setIndex">
                         <h3>Satz {{ set.setNumber }}</h3>
 
+                        <div class="field">
                         <label [for]="'weight-' + exerciseIndex + '-' + setIndex">Gewicht (kg)</label>
                         <input type="number" [id]="'weight-' + exerciseIndex + '-' + setIndex" formControlName="weight"
                             min="0" step="0.5" />
                         @if (setForm.controls.weight.invalid) {
                         <p class="field-error" role="alert">Das Gewicht darf nicht negativ sein.</p>
                         }
+                        </div>
+
+                        <div class="field">
                         <label [for]="'reps-' + exerciseIndex + '-' + setIndex">Wiederholungen</label>
                         <input type="number" [id]="'reps-' + exerciseIndex + '-' + setIndex" formControlName="reps"
                             min="1" step="1" />
                         @if (setForm.controls.reps.invalid) {
                         <p class="field-error" role="alert">Bitte gib eine ganze Zahl ab 1 ein.</p>
                         }
+                        </div>
                         @if (setForm.hasError('weightMissing')) {
                         <p class="field-error" role="alert">Bitte gib ein Gewicht an.</p>
                         }
@@ -46,33 +53,33 @@
         }
     </div>
     <div class="session-actions">
-        <button mat-raised-button color="primary" type="button" (click)="finishSession()" [disabled]="isFinishDisabled">
+        <button mat-flat-button type="button" (click)="finishSession()" [disabled]="isFinishDisabled">
             Session beenden
         </button>
 
-        <button mat-raised-button color="warn" type="button" (click)="discardSession()" [disabled]="isDiscardDisabled">
+        <button mat-stroked-button color="warn" type="button" (click)="discardSession()" [disabled]="isDiscardDisabled">
             Session verwerfen
         </button>
     </div>
 
     @if(saving()) {
-    <p>Training wird gespeichert...</p>
+    <p class="status" role="status">Training wird gespeichert...</p>
     }
 
     @if(saveError(); as error) {
-    <p role="alert">{{ error }}</p>
+    <p class="state-error" role="alert">{{ error }}</p>
     }
 
     @if(savedSessionId()) {
-    <p>Training wurde erfolgreich gespeichert.</p>
+    <p class="state-success" role="status">Training wurde erfolgreich gespeichert.</p>
 
-    <button mat-raised-button color="primary" type="button" (click)="navigateToWorkouts()">
+    <button mat-flat-button type="button" (click)="navigateToWorkouts()">
         Zur Workout-Übersicht
     </button>
     }
 
 </form>
 } @else {
-<p role="alert">{{ loadError() ?? 'Training nicht gefunden.' }}</p>
+<p class="state-error" role="alert">{{ loadError() ?? 'Training nicht gefunden.' }}</p>
 }
 }

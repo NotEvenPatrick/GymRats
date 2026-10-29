@@ -24,7 +24,7 @@ $gr-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
 // Form
 $gr-border-width: 2px;
-$gr-radius: 0;
+$gr-radius: 0px; // mit Einheit, da Material damit in max()/calc() rechnet
 
 html {
   height: 100%;
@@ -99,6 +99,15 @@ html {
       subhead-font: $gr-font-display,
       subhead-weight: 900,
       supporting-text-color: $gr-text-muted,
+    )
+  );
+  @include mat.snack-bar-overrides(
+    (
+      container-color: $gr-surface-3,
+      container-shape: $gr-radius,
+      supporting-text-color: $gr-text,
+      supporting-text-font: $gr-font-ui,
+      button-color: $gr-accent,
     )
   );
   @include mat.progress-spinner-overrides(

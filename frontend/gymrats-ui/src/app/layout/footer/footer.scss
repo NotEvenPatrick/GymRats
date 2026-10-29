@@ -3,7 +3,9 @@
 }
 
 footer {
-  border-top: 1px solid rgba(128, 128, 128, 0.25);
+  border-top: var(--gr-border-width) solid var(--gr-line);
+  background: var(--gr-surface-1);
+  color: var(--gr-text-muted);
 }
 
 .footer-content {
@@ -14,5 +16,9 @@ footer {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  font-size: 0.875rem;
+  flex-wrap: wrap;
+  font-family: var(--gr-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }

@@ -1,0 +1,126 @@
+@use '../../../shared/styles/page';
+@use '@angular/material' as mat;
+
+.back-link {
+    margin-bottom: 1.5rem;
+}
+
+.page-header {
+    @include page.page-header;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 2rem;
+        margin-top: 0.5rem;
+
+        p {
+            margin: 0;
+            font-family: var(--gr-font-mono);
+            font-size: 0.85rem;
+            color: var(--gr-text-muted);
+        }
+
+        strong {
+            color: var(--gr-text);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+    }
+}
+
+.section-title {
+    margin: 0 0 1rem;
+    font-family: var(--gr-font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gr-accent);
+}
+
+mat-card {
+    @include mat.card-overrides(
+        (
+            elevated-container-color: var(--gr-surface-1),
+            elevated-container-shape: 0,
+            elevated-container-elevation: none,
+            title-text-font: var(--gr-font-display),
+            title-text-size: 1.5rem,
+            title-text-weight: 900,
+            subtitle-text-color: var(--gr-text-muted),
+            subtitle-text-font: var(--gr-font-mono),
+        )
+    );
+
+    margin-bottom: 1.5rem;
+    border: var(--gr-border-width) solid var(--gr-line-strong);
+    border-top: 6px solid var(--gr-accent);
+    box-shadow: 6px 6px 0 var(--gr-surface-3);
+}
+
+mat-card-header {
+    padding-top: 1rem;
+}
+
+mat-card-title {
+    text-transform: uppercase;
+}
+
+.planned {
+    margin: 0 0 1rem;
+    color: var(--gr-text-muted);
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 360px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--gr-line);
+}
+
+th {
+    font-family: var(--gr-font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gr-text-muted);
+    border-bottom: var(--gr-border-width) solid var(--gr-line-strong);
+}
+
+td {
+    font-family: var(--gr-font-mono);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+td:first-child {
+    color: var(--gr-accent);
+}
+
+tbody tr:hover {
+    background: var(--gr-surface-2);
+}
+
+.state-error {
+    @include page.state-message(var(--gr-error));
+}
+
+.state-empty {
+    @include page.state-message;
+}
+
+mat-progress-spinner {
+    margin: 2rem auto;
+}

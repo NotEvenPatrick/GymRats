@@ -158,3 +158,23 @@ tbody tr {
     padding-top: 1.5rem;
     border-top: var(--gr-border-width) solid var(--gr-line);
 }
+
+// Abstand unter den Feldern außerhalb der Tabelle, damit Fehlermeldungen Luft haben
+form > mat-form-field {
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+
+// Fehlermeldungen in den Zeilen vergrößern die Zeile (subscriptSizing dynamic)
+tbody td {
+    padding-block: 1.25rem;
+}
+
+.table-container + .validation-error,
+.table-container + button {
+    margin-top: 1.25rem;
+}
+
+.validation-error + button {
+    margin-top: 0;
+}
