@@ -12,10 +12,6 @@ Der aktuelle Funktionsumfang umfasst:
 - Start einer Session auf Basis eines Workouts, Eingabe von Gewicht und Wiederholungen sowie Speichern abgeschlossener Trainings.
 - Eine Trainingshistorie und Detailansichten vergangener Sessions.
 
-**Fachliche Entscheidung:** Eine Session wird erst beim erfolgreichen Abschließen gespeichert. Das Verwerfen einer laufenden Session navigiert zurück, ohne einen Session-Datensatz anzulegen. Es gibt im aktuellen Modell daher keinen `SessionStatus`.
-
-`Role` kennt `ATHLETE` und `TRAINER`, aber ein vollständiger Trainer-/Athleten-Workflow mit rollenabhängigen Berechtigungen ist in den aktuellen Routen und Endpunkten nicht umgesetzt. Nicht allein aus dem Enum auf fertige Trainerfunktionalität schließen.
-
 ## 2. Technologieüberblick
 
 | Bereich | Technologie | Rolle |
