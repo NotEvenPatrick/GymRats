@@ -10,25 +10,10 @@
 </section>
 
 <section class="quick-actions" aria-label="Schnellzugriff">
-    <mat-card>
-        <mat-card-header>
-            <span class="tag" aria-hidden="true">01 / BIBLIOTHEK</span>
-            <mat-card-title>Übungen</mat-card-title>
-            <mat-card-subtitle>Deine Übungsbibliothek</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-            <p>Verwalte deine Übungen und behalte deinen Überblick über die verfügbaren Trainingsmöglichkeiten.</p>
-        </mat-card-content>
-
-        <mat-card-actions align="end">
-            <button mat-flat-button routerLink="/exercises">Zu den Übungen</button>
-        </mat-card-actions>
-    </mat-card>
 
     <mat-card>
         <mat-card-header>
-            <span class="tag" aria-hidden="true">02 / PLANUNG</span>
+            <span class="tag" aria-hidden="true">01 / PLANUNG</span>
             <mat-card-title>Trainingspläne</mat-card-title>
             <mat-card-subtitle>Deine Pläne</mat-card-subtitle>
         </mat-card-header>
@@ -38,13 +23,13 @@
         </mat-card-content>
 
         <mat-card-actions align="end">
-            <button mat-stroked-button routerLink="/workouts">Zu den Trainingsplänen</button>
+            <button mat-flat-button routerLink="/workouts">Zu den Trainingsplänen</button>
         </mat-card-actions>
     </mat-card>
 
     <mat-card>
         <mat-card-header>
-            <span class="tag" aria-hidden="true">03 / LOG</span>
+            <span class="tag" aria-hidden="true">02 / LOG</span>
             <mat-card-title>Trainingshistorie</mat-card-title>
             <mat-card-subtitle>Deine Sessions</mat-card-subtitle>
         </mat-card-header>
@@ -55,6 +40,22 @@
 
         <mat-card-actions align="end">
             <button mat-stroked-button routerLink="/sessions">Zur Historie</button>
+        </mat-card-actions>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-header>
+            <span class="tag" aria-hidden="true">03 / BIBLIOTHEK</span>
+            <mat-card-title>Übungen</mat-card-title>
+            <mat-card-subtitle>Deine Übungsbibliothek</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <p>Verwalte deine Übungen und behalte deinen Überblick über die verfügbaren Trainingsmöglichkeiten.</p>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+            <button mat-stroked-button routerLink="/exercises">Zu den Übungen</button>
         </mat-card-actions>
     </mat-card>
 </section>
