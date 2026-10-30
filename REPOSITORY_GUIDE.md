@@ -1,6 +1,4 @@
-# GymRats – Repository- und Architekturguide
-
-Dieser Guide erklärt, wie GymRats aufgebaut ist, wie die wichtigsten Daten durch das System fließen und welche Dateien du lesen solltest, um den Code eigenständig nachvollziehen zu können. Er beschreibt den Repository-Stand, für den diese Dokumentation erstellt wurde; passe ihn an, wenn sich Architektur oder Verhalten ändern.
+# GymRats – Repository- und Architekturguid
 
 ## 1. Was ist GymRats?
 
