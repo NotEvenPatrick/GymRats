@@ -1,6 +1,4 @@
-# GymRats – Repository- und Architekturguide
-
-Dieser Guide erklärt, wie GymRats aufgebaut ist, wie die wichtigsten Daten durch das System fließen und welche Dateien du lesen solltest, um den Code eigenständig nachvollziehen zu können. Er beschreibt den Repository-Stand, für den diese Dokumentation erstellt wurde; passe ihn an, wenn sich Architektur oder Verhalten ändern.
+# GymRats – Repository- und Architekturguid
 
 ## 1. Was ist GymRats?
 
@@ -13,10 +11,6 @@ Der aktuelle Funktionsumfang umfasst:
 - CRUD-Funktionen für eigene Workouts mit geordneten Übungen, Satzvorgaben und Wiederholungsbereichen.
 - Start einer Session auf Basis eines Workouts, Eingabe von Gewicht und Wiederholungen sowie Speichern abgeschlossener Trainings.
 - Eine Trainingshistorie und Detailansichten vergangener Sessions.
-
-**Fachliche Entscheidung:** Eine Session wird erst beim erfolgreichen Abschließen gespeichert. Das Verwerfen einer laufenden Session navigiert zurück, ohne einen Session-Datensatz anzulegen. Es gibt im aktuellen Modell daher keinen `SessionStatus`.
-
-`Role` kennt `ATHLETE` und `TRAINER`, aber ein vollständiger Trainer-/Athleten-Workflow mit rollenabhängigen Berechtigungen ist in den aktuellen Routen und Endpunkten nicht umgesetzt. Nicht allein aus dem Enum auf fertige Trainerfunktionalität schließen.
 
 ## 2. Technologieüberblick
 
