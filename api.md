@@ -13,7 +13,7 @@ For local frontend development, the Angular dev server proxies `/api/**` to this
 Registration and login are public. All other API endpoints require a valid JWT access token:
 
 ```http
-Authorization: Bearer <access-token>
+Authorization: Bearer <token>
 ```
 
 The login response contains the token. It expires after one hour.
@@ -39,7 +39,7 @@ The login response contains the token. It expires after one hour.
 }
 ```
 
-The password must contain 8–72 characters. The backend normalises email addresses by trimming whitespace and converting them to lowercase. Passwords are stored as BCrypt hashes.
+The password must contain 8–72 characters (BCrypt processes at most 72 bytes). The backend normalises email addresses by trimming whitespace and converting them to lowercase. Passwords are stored as BCrypt hashes. Registering an already-used email address returns `409 Conflict`.
 
 **Login request**
 
@@ -50,7 +50,7 @@ The password must contain 8–72 characters. The backend normalises email addres
 }
 ```
 
-The login response contains `userId`, `firstName`, `lastName`, `email`, and `token`.
+The login response contains `userId`, `firstName`, `lastName`, `email`, and `token`. Invalid login credentials return `401 Unauthorized`.
 
 ### Exercises
 
@@ -138,7 +138,7 @@ Session endpoints require authentication. A session can only be prepared from a 
 }
 ```
 
-The request is validated against the source workout. Exercise IDs must match the exercises at the submitted positions. Set numbers must be unique and contiguous from `1`, and the number of submitted sets cannot exceed the planned number of sets for that exercise. At least one set must be saved. Weight must be zero or greater; repetitions and set numbers must be positive.
+The request is validated against the source workout. Exercise IDs must match the exercises at the submitted positions, and submitted positions must not be duplicated. Set numbers must be unique and contiguous from `1`, and the number of submitted sets cannot exceed the planned number of sets for that exercise. At least one set must be saved across the complete session; individual exercises may have no submitted sets. Weight must be zero or greater; repetitions and set numbers must be positive. `startedAt` may be at most one minute in the future; a more distant future timestamp is rejected.
 
 The backend sets `endedAt` when the session is saved. The session history stores a snapshot of the workout and exercise details. A session record is created only when the user finishes and saves the session; discarding an in-progress session in the frontend does not call this endpoint and therefore does not create a history entry. The data model has no session status field: the previous two-status approach was removed during refactoring because it could produce inconsistent states during saving. A persisted record is therefore the single indicator that a training session was finished and saved.
 
